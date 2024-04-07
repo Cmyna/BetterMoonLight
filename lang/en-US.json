@@ -29,8 +29,8 @@
     "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "Ambient Light Temperature",
     "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "Control ambient night lighting temperature (Kelvin unit)",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightTemperature]": "Moon Light Temperature",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightTemperature]": "Control moon light temperature(Kelvin unit)",
+    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "Moon Light Temperature",
+    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "Control moon light temperature(Kelvin unit)",
 
     "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "Intensity Balance",
     "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "Enable this option to balance the brightness of moonlight in the evening and midnight sky"

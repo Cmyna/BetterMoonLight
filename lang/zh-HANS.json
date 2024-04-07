@@ -29,8 +29,8 @@
     "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "环境光色温",
     "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "控制夜晚环境光的色温(开尔文单位)",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightTemperature]": "月光色温",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightTemperature]": "控制月光的色温(开尔文单位)",
+    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "月光色温",
+    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "控制月光的色温(开尔文单位)",
 
     "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "亮度均衡",
     "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "启用此选项以平衡月亮在地平线和正空中对地面的亮度"

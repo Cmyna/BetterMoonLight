@@ -25,7 +25,7 @@ namespace BetterMoonLight.Systems
             var theta = Mathf.PI / 2 - angle * Mathf.Deg2Rad; // lambert intensity function theta
             var multiplier = 1 / Mathf.Cos(theta);
             // Mod.log.Info("angle: " + angle + ", multiplier: " + multiplier + ", theta: " + theta + ", CosTheta: " + Mathf.Cos(theta));
-            multiplier = Mathf.Max(multiplier, 0.3f);
+            // multiplier = Mathf.Max(multiplier, 0.3f);
             //multiplier = Mathf.Clamp(multiplier, 0.3f, 1f);
             return multiplier;
         }
