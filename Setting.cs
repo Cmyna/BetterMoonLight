@@ -38,7 +38,7 @@ namespace BetterMoonLight
         /// <summary>
         /// control night sky light intensity
         /// </summary>
-        [SettingsUISlider(min = 0.05, max = 15, step = 0.05f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISlider(min = 0.05f, max = 15, step = 0.05f, unit = Unit.kFloatTwoFractions)]
         [SettingsUISection(ksMain, kgNight)]
         public float NightSkyLight { get; set; } = 1f;
 

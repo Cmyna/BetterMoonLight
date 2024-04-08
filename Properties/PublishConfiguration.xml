@@ -8,9 +8,7 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="Remake natural lighting(day and night lighting) in game to gain visual improvement" /-->
 	<LongDescription>
-    Descriptions: 
-    
-    Visual improvement for natural moon and night lighting.
+    ***Visual improvement for natural moon and night lighting.***
 
     The mod overwrites the natural night lighting in game to get instant improvement
 
@@ -20,8 +18,6 @@
 	<!--Thumbnail-->
 	<Thumbnail Value="Properties/Thumbnail.png" />
 	<!--Screenshot, can be set multiple times-->
-  <Screenshot Value="Properties/Images/vanilla1.png" />
-  <Screenshot Value="Properties/Images/vanilla2.png" />
 	<Screenshot Value="Properties/Images/modded1.png" />
   <Screenshot Value="Properties/Images/modded2.png" />
   <Screenshot Value="Properties/Images/modded3.png" />
@@ -33,13 +29,17 @@
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/bettermoonlight.1660561" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.0" />
+	<ModVersion Value="1.1" />
 	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.1.*" />
+	<GameVersion Value="1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="75426" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog Value="" />
+  <ChangeLog>
+    fix localization problem.
+    
+    Set minimum bound to NightSkyLight slider to prevent specular lighting disappear
+  </ChangeLog>
 	<!--ChangeLog>
 	</ChangeLog-->
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->

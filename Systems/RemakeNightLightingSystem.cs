@@ -111,7 +111,8 @@ namespace BetterMoonLight.Systems
             if (!TryGetLightData(out var nightLight, out var moonLight)) return;
             moonDiskLight.transform.position = moonLight.transform.position;
             moonDiskLight.transform.rotation = moonLight.transform.rotation;
-            if (moonDiskLight.additionalData.surfaceTexture == null)
+            // follow the vanilla moon texture setting
+            if (moonDiskLight.additionalData.surfaceTexture != moonLight.additionalData.surfaceTexture)
             {
                 moonDiskLight.additionalData.surfaceTexture = moonLight.additionalData.surfaceTexture;
             }
