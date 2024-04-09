@@ -13,17 +13,20 @@ using BetterMoonLight.Systems;
 using System.Collections.Generic;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering.LookDev;
+using Game.UI.Localization;
+using System.Collections;
 
 namespace BetterMoonLight
 {
     [FileLocation(nameof(BetterMoonLight))]
-    [SettingsUIShowGroupName(kgBasic, kgNight)]
+    [SettingsUIShowGroupName(kgBasic, kgNight, kgAurora)]
     public class Setting : ModSetting
     {
         public const string ksMain = "Main";
 
         public const string kgBasic = "Basic";
         public const string kgNight = "Night";
+        public const string kgAurora = "Aurora";
 
         private readonly RemakeNightLightingSystem _nightLightingSystem;
 
@@ -79,6 +82,28 @@ namespace BetterMoonLight
             }
         }
 
+
+        [SettingsUIDropdown(typeof(Setting), nameof(GetAuroraOverwriteLevels) )]
+        [SettingsUISection(ksMain, kgAurora)]
+        public int AuroraOverwriteLevel { get; set; } = 0;
+
+        public DropdownItem<int>[] GetAuroraOverwriteLevels()
+        {
+            var optionsId = "OPTIONS.BetterMoonLight.OverwriteAuroraLevel";
+            DropdownItem<int>[] items = {
+                new DropdownItem<int>() { value = 0, displayName = optionsId + "[0]" },
+                new DropdownItem<int>() { value = 1, displayName = optionsId + "[1]" },
+                new DropdownItem<int>() { value = 2, displayName = optionsId + "[2]" }
+            };
+            return items;
+        }
+
+
+        [SettingsUISection(ksMain, kgAurora)]
+        [SettingsUISlider(min = 0f, max = 10f, step = 0.05f, unit = Unit.kFloatSingleFraction)]
+        public float AuroraIntensity { get; set; } = 0f;
+
+
         [SettingsUIHidden]
         public bool Contra { get; set; } = false;
 
@@ -109,6 +134,9 @@ namespace BetterMoonLight
             _nightLightingSystem.DirectLightIntensity = MoonDirectionalLight;
             _nightLightingSystem.DirectLightAverager = MoonLightAveragerStrength;
             _nightLightingSystem.MoonTemperature = MoonTemperature;
+
+            _nightLightingSystem.VolumePriority = AuroraOverwriteLevel == 1 ? 1500 : 2500;
+            _nightLightingSystem.UpdateAurora(AuroraOverwriteLevel > 0, AuroraIntensity);
         }
 
 
@@ -148,6 +176,7 @@ namespace BetterMoonLight
 
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgBasic), "Basic" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgNight), "Night Settings" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.kgAurora), "Aurora" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OverwriteNightLighting) ), "Overwrite Night Lighting" },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AmbientLight) ), "Night Ambient Light Intensity" },
@@ -165,6 +194,14 @@ namespace BetterMoonLight
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ResetModSettings)), "Reset To Default" },
                 { m_Setting.GetOptionWarningLocaleID(nameof(Setting.ResetModSettings)), "Are you sure set to default?" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AuroraOverwriteLevel) ), "Overwrite Aurora" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AuroraIntensity) ), "Aurora Intensity" },
+
+                // overwrite level drop down items locale
+                { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]", "Not Overwrite" },
+                { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]", "Overwrite Basic" },
+                { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]", "Overwrite PhotoMode" },
             };
         }
 

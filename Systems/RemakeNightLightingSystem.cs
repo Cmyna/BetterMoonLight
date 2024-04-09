@@ -5,6 +5,7 @@
 using Game;
 using Game.Objects;
 using Game.Pathfind;
+using Game.Rendering;
 using Game.Simulation;
 using System.Drawing;
 using System.Numerics;
@@ -25,6 +26,18 @@ namespace BetterMoonLight.Systems
         public const string kMoonDiskLight = "MoonDiskLight";
         public const string kMoonDirectLight = "MoonLight"; // vanilla MoonLight GO
         public const string kNightAmbientLight = "NightLight"; // vanilla NightLight GO
+        public const string kVolume = "RemakeNightLightingSystemVolume";
+
+        public const int VolumeDefaultPriority = 1500;
+
+        public float VolumePriority
+        {
+            get {
+                if (volume == null) return VolumeDefaultPriority; // default volume priority
+                return volume.priority; 
+            }
+            set { if (volume != null) volume.priority = value;  }
+        }
 
         public float AmbientTemperature = 6750f;
 
@@ -36,7 +49,7 @@ namespace BetterMoonLight.Systems
 
         public float DirectLightAverager = 0.7f;
 
-        public bool overwrite = true;
+        public bool OverwriteNightLighting = true;
 
         public bool dirty = false;
 
@@ -46,12 +59,20 @@ namespace BetterMoonLight.Systems
 
         private LightDataEx moonDiskLight;
 
+        private Volume volume;
+
+        private PhysicallyBasedSky sky;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             planetarySystem = Unity.Entities.World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PlanetarySystem>();
             InitNightSkyLight();
             InitMoonDiskLight();
+
+            // create volume
+            volume = VolumeHelper.CreateVolume(kVolume, VolumeDefaultPriority);
+            VolumeHelper.GetOrCreateVolumeComponent(volume, ref sky);
         }
 
 
@@ -59,10 +80,10 @@ namespace BetterMoonLight.Systems
         {
             if (dirty)
             {
-                ToggleOverwrite(overwrite);
+                ToggleOverwrite(OverwriteNightLighting);
                 UpdateTemperature(AmbientTemperature, MoonTemperature);
             }
-            if (!overwrite) return;
+            if (!OverwriteNightLighting) return;
             UpdateNightLightTransform();
             UpdateAmbientLight();
             UpdateNightSkyLightTransform();
@@ -92,17 +113,6 @@ namespace BetterMoonLight.Systems
         {
             if (!TryGetLightData(out var nightLight, out var moonLight)) return;
             nightLight.light.intensity = AmbientIntensity;
-        }
-
-
-
-        private bool TryGetLightData(out PlanetarySystem.LightData nightLight, out PlanetarySystem.LightData moonLight)
-        {
-            nightLight = planetarySystem.NightLight;
-            moonLight = planetarySystem.MoonLight;
-            return nightLight.transform != null && 
-                moonLight.transform != null &&
-                nightLight.isValid && moonLight.isValid;
         }
 
 
@@ -157,7 +167,7 @@ namespace BetterMoonLight.Systems
             additionalData.lightlayersMask = LightLayerEnum.LightLayerDefault;
             additionalData.angularDiameter = 2f;
             additionalData.intensity = 0f;
-            additionalData.lightUnit = LightUnit.Lux;
+            additionalData.lightUnit = UnityEngine.Rendering.HighDefinition.LightUnit.Lux;
             additionalData.flareFalloff = 0;
             additionalData.flareSize = 0;
             additionalData.lightDimmer = 0.1f;
@@ -178,7 +188,7 @@ namespace BetterMoonLight.Systems
 
         public void ToggleOverwrite(bool doOverwrite)
         {
-            overwrite = doOverwrite;
+            OverwriteNightLighting = doOverwrite;
             if (!TryGetLightData(out var nightLight, out var moonLight))
             {
                 // Mod.log.Warn("Could not get vanilla lighting data when trying to overwrite night lighting");
@@ -186,7 +196,7 @@ namespace BetterMoonLight.Systems
                 return;
             }
 
-            if (overwrite)
+            if (OverwriteNightLighting)
             {
                 nightLight.additionalData.affectDiffuse = true;
                 nightLight.additionalData.affectSpecular = false;
@@ -250,6 +260,23 @@ namespace BetterMoonLight.Systems
             moonLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(MoonTemperature);
             nightSkyLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(MoonTemperature);
         }
+
+        public void UpdateAurora(bool overwrite, float intensity = 0f)
+        {
+            sky.auroraBorealisEmissionMultiplier.overrideState = overwrite;
+            sky.auroraBorealisEmissionMultiplier.value = intensity;
+        }
+
+
+        private bool TryGetLightData(out PlanetarySystem.LightData nightLight, out PlanetarySystem.LightData moonLight)
+        {
+            nightLight = planetarySystem.NightLight;
+            moonLight = planetarySystem.MoonLight;
+            return nightLight.transform != null &&
+                moonLight.transform != null &&
+                nightLight.isValid && moonLight.isValid;
+        }
+
 
     }
 
