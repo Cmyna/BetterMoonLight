@@ -3,17 +3,12 @@
 // Licensed under MIT License.
 
 using Game;
-using Game.Objects;
-using Game.Pathfind;
 using Game.Rendering;
 using Game.Simulation;
-using System.Drawing;
-using System.Numerics;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
-using static Game.Prefabs.CharacterGroup;
 
 namespace BetterMoonLight.Systems
 {
@@ -268,6 +263,12 @@ namespace BetterMoonLight.Systems
         }
 
 
+        public void UpdateSpaceTextureEmmision(float multiplier)
+        {
+            sky.spaceEmissionMultiplier.Override(multiplier);
+        }
+
+
         private bool TryGetLightData(out PlanetarySystem.LightData nightLight, out PlanetarySystem.LightData moonLight)
         {
             nightLight = planetarySystem.NightLight;
@@ -276,6 +277,7 @@ namespace BetterMoonLight.Systems
                 moonLight.transform != null &&
                 nightLight.isValid && moonLight.isValid;
         }
+
 
 
     }

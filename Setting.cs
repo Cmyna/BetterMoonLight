@@ -72,6 +72,10 @@ namespace BetterMoonLight
         [SettingsUIHidden]
         public float MoonLightAveragerStrength { get; set; } = 0.7f;
 
+        [SettingsUISlider(min = 0f, max = 1f, step = 0.05f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISection(ksMain, kgNight)]
+        public float StarfieldEmmisionStrength { get; set; } = 0.5f;
+
 
         [SettingsUISection(ksMain, kgNight)]
         public bool MoonLightIntensityBalance { 
@@ -137,6 +141,7 @@ namespace BetterMoonLight
 
             _nightLightingSystem.VolumePriority = AuroraOverwriteLevel == 1 ? 1500 : 2500;
             _nightLightingSystem.UpdateAurora(AuroraOverwriteLevel > 0, AuroraIntensity);
+            _nightLightingSystem.UpdateSpaceTextureEmmision(StarfieldEmmisionStrength);
         }
 
 
@@ -157,6 +162,7 @@ namespace BetterMoonLight
             NightLightTemperature = 6750f;
             MoonTemperature = 7200f;
             MoonLightIntensityBalance = true;
+            StarfieldEmmisionStrength = 0.5f;
         }
 
     }
@@ -197,6 +203,8 @@ namespace BetterMoonLight
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AuroraOverwriteLevel) ), "Overwrite Aurora" },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AuroraIntensity) ), "Aurora Intensity" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StarfieldEmmisionStrength) ), "Star Field Emission Strength" },
 
                 // overwrite level drop down items locale
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]", "Not Overwrite" },
