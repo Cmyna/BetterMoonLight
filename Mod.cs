@@ -34,20 +34,21 @@ namespace BetterMoonLight
             {
                 nightLightingSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RemakeNightLightingSystem>();
             }
-            log.Info("Remake Natual Lighting: Night Lighting System Inited");
+            log.Info("Night Lighting System Inited");
 
 
             Setting = new Setting(this, nightLightingSystem);
             Setting.RegisterInOptionsUI();
             GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(Setting));
-            Setting.Apply();
-            log.Info("Remake Natual Lighting: UI Setting Object Loaded");
+            log.Info("UI Setting Object Loaded");
 
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.EditorSimulation);
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.Rendering);
 
             AssetDatabase.global.LoadSettings(nameof(BetterMoonLight), Setting, new Setting(this, nightLightingSystem));
+            Setting.Apply();
+            log.Info("Setting Loaded");
         }
 
         public void OnDispose()
