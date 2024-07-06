@@ -28,16 +28,12 @@ namespace BetterMoonLight
             log.Info(nameof(OnLoad));
 
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
-                log.Info($"Current mod asset at {asset.path}");
-
-            if (nightLightingSystem == null)
             {
-                nightLightingSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RemakeNightLightingSystem>();
+                log.Info($"Current mod asset at {asset.path}");
             }
-            log.Info("Night Lighting System Inited");
 
 
-            Setting = new Setting(this, nightLightingSystem);
+            Setting = new Setting(this);
             Setting.RegisterInOptionsUI();
             GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(Setting));
             log.Info("UI Setting Object Loaded");
@@ -46,7 +42,7 @@ namespace BetterMoonLight
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.EditorSimulation);
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.Rendering);
 
-            AssetDatabase.global.LoadSettings(nameof(BetterMoonLight), Setting, new Setting(this, nightLightingSystem));
+            AssetDatabase.global.LoadSettings(nameof(BetterMoonLight), Setting, new Setting(this));
             Setting.Apply();
             log.Info("Setting Loaded");
         }

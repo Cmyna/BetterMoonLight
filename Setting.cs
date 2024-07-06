@@ -15,6 +15,7 @@ using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering.LookDev;
 using Game.UI.Localization;
 using System.Collections;
+using Unity.Entities;
 
 namespace BetterMoonLight
 {
@@ -28,7 +29,7 @@ namespace BetterMoonLight
         public const string kgNight = "Night";
         public const string kgAurora = "Aurora";
 
-        private readonly RemakeNightLightingSystem _nightLightingSystem;
+        private RemakeNightLightingSystem _nightLightingSystem;
 
         [SettingsUISection(ksMain, kgBasic)]
         public bool OverwriteNightLighting { get; set; } = true;
@@ -108,8 +109,10 @@ namespace BetterMoonLight
         public float AuroraIntensity { get; set; } = 0f;
 
 
-        [SettingsUIHidden]
-        public bool Contra { get; set; } = false;
+        // [SettingsUIHidden]
+        // public bool Contra { get; set; } = false;
+        [SettingsUISection(ksMain, kgBasic)]
+        public bool ShowOptionsInDeveloperPanel { get; set; } = false;
 
 
         [SettingsUIButton]
@@ -120,7 +123,7 @@ namespace BetterMoonLight
             set
             {
                 SetDefaults(); // Apply defaults.
-                Contra = true;
+                // Contra = true;
                 Apply();
             }
         }
@@ -129,27 +132,21 @@ namespace BetterMoonLight
         public override void Apply()
         {
             base.Apply();
-            _nightLightingSystem.ToggleOverwrite(OverwriteNightLighting);
-            _nightLightingSystem.UpdateMoonDisk(MoonDiskSize, MoonDiskIntensity);
-            _nightLightingSystem.UpdateNightSky(NightSkyLight);
-            _nightLightingSystem.UpdateTemperature(NightLightTemperature, MoonTemperature);
-            _nightLightingSystem.AmbientIntensity = AmbientLight;
-            _nightLightingSystem.AmbientTemperature = NightLightTemperature;
-            _nightLightingSystem.DirectLightIntensity = MoonDirectionalLight;
-            _nightLightingSystem.DirectLightAverager = MoonLightAveragerStrength;
-            _nightLightingSystem.MoonTemperature = MoonTemperature;
-
-            _nightLightingSystem.VolumePriority = AuroraOverwriteLevel == 1 ? 1500 : 2500;
-            _nightLightingSystem.UpdateAurora(AuroraOverwriteLevel > 0, AuroraIntensity);
-            _nightLightingSystem.UpdateSpaceTextureEmmision(StarfieldEmmisionStrength);
+            if (_nightLightingSystem == null)
+            {
+                _nightLightingSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RemakeNightLightingSystem>();
+            }
+            if (_nightLightingSystem != null)
+            {
+                _nightLightingSystem.ShowDebugOptions = ShowOptionsInDeveloperPanel;
+                _nightLightingSystem.SetDirty();
+            }
+            
         }
 
 
 
-        public Setting(IMod mod, RemakeNightLightingSystem nightLightingSystem) : base(mod)
-        {
-            _nightLightingSystem = nightLightingSystem;
-        }
+        public Setting(IMod mod) : base(mod) {}
 
 
         public override void SetDefaults()
@@ -161,7 +158,7 @@ namespace BetterMoonLight
             MoonDiskIntensity = 1f;
             NightLightTemperature = 6750f;
             MoonTemperature = 7200f;
-            MoonLightIntensityBalance = true;
+            MoonLightIntensityBalance = false;
             StarfieldEmmisionStrength = 0.5f;
         }
 
@@ -183,6 +180,9 @@ namespace BetterMoonLight
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgBasic), "Basic" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgNight), "Night Settings" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgAurora), "Aurora" },
+
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show Options in Developer Panel" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show same settings in developer panel (launch with argument '-developerMode' and open by hotkey tab). Then you can see a new tab 'BetterMoonLight' in panel" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OverwriteNightLighting) ), "Overwrite Night Lighting" },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AmbientLight) ), "Night Ambient Light Intensity" },
