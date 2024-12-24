@@ -23,6 +23,7 @@ namespace BetterMoonLight.Systems
         public const string kNightSkyLight = "MoonLightAtmosphere";
         public const string kMoonDiskLight = "MoonDiskLight";
         public const string kMoonDirectLight = "MoonLight"; // vanilla MoonLight GO
+        public const string kMoonSpecularLight = "MoonSpecularLight";
         public const string kNightAmbientLight = "NightLight"; // vanilla NightLight GO
         public const string kVolume = "RemakeNightLightingSystemVolume";
 
@@ -39,31 +40,8 @@ namespace BetterMoonLight.Systems
             set { if (volume != null) volume.priority = value;  }
         }
 
-        /*public float AmbientIntensity = 1f;
-
-        public float AmbientTemperature = 6750f;
-
-        public float NightSkyLightIntensity = 1f;
-
-        public float DirectLightTemperature = 6750f;
-
-        public float DirectLightIntensity = 1f;
-
-        public float MoonDiskSize = 1.5f;
-
-        public float MoonDiskIntensity = 1f;
-
-        public float DirectLightAverager = 0.7f;
-
-        public bool OverwriteNightLighting = true;*/
-
         public bool dirty = false;
 
-        /*public int AuroraOverwriteLevel = 0;
-
-        public float AuroraIntensity = 0f;
-
-        public float SpaceEmmisionMultiplier = 0.5f;*/
 
         public bool ShowDebugOptions
         {
@@ -86,6 +64,8 @@ namespace BetterMoonLight.Systems
 
         private LightDataEx moonDiskLight;
 
+        private LightDataEx moonSpecularLight;
+
         private Volume volume;
 
         private PhysicallyBasedSky sky;
@@ -96,6 +76,7 @@ namespace BetterMoonLight.Systems
             planetarySystem = Unity.Entities.World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PlanetarySystem>();
             InitNightSkyLight();
             InitMoonDiskLight();
+            InitMoonSpecularLight();
 
             // create volume
             volume = VolumeHelper.CreateVolume(kVolume, VolumeDefaultPriority);
@@ -114,9 +95,9 @@ namespace BetterMoonLight.Systems
             if (Mod.Setting.OverwriteNightLighting)
             {
                 UpdateNightLightTransform();
-                UpdateNightSkyLightTransform();
                 UpdateNightSky();
                 UpdateDirectMoonLight();
+                UpdateMoonSpecular();
                 UpdateAmbientLight();
                 UpdateMoonDisk();
                 UpdateTemperature();
@@ -184,24 +165,17 @@ namespace BetterMoonLight.Systems
 
             var rotation = moonLight.transform.rotation;
             var multiplier = Utils.AntiLambertIntensity(rotation); // the value over 1
+            moonSpecularLight.additionalData.intensity = Mod.Setting.MoonDirectionalLight / multiplier / 3f;
             // expression to ensure f(1, x) = 1, f(n, 1) = n, f(n, 0) = 1
             // where f(x, y), x => multiplier computed above, y => MoonLightAveragerStrength
             multiplier = (multiplier - 1) * averagerStrength + 1;
             moonLight.additionalData.intensity = intensity * multiplier;
+
+            
             return true;
         }
 
         
-
-
-        private bool UpdateNightSkyLightTransform()
-        {
-            if (planetarySystem.MoonLight.transform == null) return false;
-            if (nightSkyLight.transform == null) return false;
-            nightSkyLight.transform.position = planetarySystem.MoonLight.transform.position;
-            nightSkyLight.transform.rotation = planetarySystem.MoonLight.transform.rotation;
-            return true;
-        }
 
         /// <summary>
         /// 
@@ -224,9 +198,11 @@ namespace BetterMoonLight.Systems
                 moonLight.additionalData.affectSpecular = false;
                 moonLight.additionalData.affectsVolumetric = true;
                 moonLight.additionalData.interactsWithSky = false;
+                moonLight.additionalData.volumetricDimmer = 0.25f;
 
                 nightSkyLight.light.enabled = true;
                 moonDiskLight.light.enabled = true;
+                moonSpecularLight.light.enabled = true;
             } else
             {
                 nightLight.additionalData.affectDiffuse = true;
@@ -244,6 +220,7 @@ namespace BetterMoonLight.Systems
 
                 nightSkyLight.light.enabled = false;
                 moonDiskLight.light.enabled = false;
+                moonSpecularLight.light.enabled = false;
             }
             return true;
         }
@@ -252,8 +229,16 @@ namespace BetterMoonLight.Systems
         private void UpdateNightSky()
         {
             nightSkyLight.light.intensity = Mod.Setting.NightSkyLight;
-            // ensure increased night sky light not make specular to strong
             nightSkyLight.additionalData.lightDimmer = 0.5f / Mod.Setting.NightSkyLight;
+        }
+
+        private bool UpdateMoonSpecular()
+        {
+            if (planetarySystem.MoonLight.transform == null) return false;
+            if (moonSpecularLight.transform == null) return false;
+            moonSpecularLight.transform.position = planetarySystem.MoonLight.transform.position;
+            moonSpecularLight.transform.rotation = planetarySystem.MoonLight.transform.rotation;
+            return true;
         }
 
         private bool UpdateTemperature()
@@ -266,6 +251,7 @@ namespace BetterMoonLight.Systems
             }
             nightLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(nightLightTempature);
             moonLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
+            moonSpecularLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
             nightSkyLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
             return true;
         }
@@ -303,13 +289,31 @@ namespace BetterMoonLight.Systems
             Utils.CreateDirectionalLight(kNightSkyLight, out nightSkyLight);
             var additionalData = nightSkyLight.additionalData;
             additionalData.affectDiffuse = false;
-            additionalData.affectSpecular = true;
+            additionalData.affectSpecular = false;
             additionalData.affectsVolumetric = true;
             additionalData.interactsWithSky = true;
             additionalData.angularDiameter = 0f;
             additionalData.lightlayersMask = LightLayerEnum.LightLayerDefault;
             additionalData.intensity = 1f;
             additionalData.lightDimmer = 0.5f;
+
+            nightSkyLight.transform.position = Vector3.up;
+            nightSkyLight.transform.LookAt(Vector3.zero);
+        }
+
+
+        private void InitMoonSpecularLight()
+        {
+            Utils.CreateDirectionalLight(kMoonSpecularLight, out moonSpecularLight);
+            var additionalData = moonSpecularLight.additionalData;
+            additionalData.affectDiffuse = false;
+            additionalData.affectSpecular = true;
+            additionalData.affectsVolumetric = true;
+            additionalData.interactsWithSky = false;
+            additionalData.angularDiameter = 0f;
+            additionalData.lightlayersMask = LightLayerEnum.LightLayerDefault;
+            additionalData.intensity = 1f;
+            additionalData.lightDimmer = 0.1f;
         }
 
 
