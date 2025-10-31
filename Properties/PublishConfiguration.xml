@@ -28,14 +28,13 @@ Various options provided to create stylized final effect.
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/bettermoonlight.1660561" />
 	<!--Version of the mod-->
-	<ModVersion Value="1.5" />
+	<ModVersion Value="1.6" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="75426" />
   <ChangeLog>
-fix issue that reset ambient light visual accidently after after sunset
-fix issue the night sky light effect not work when moon underground
+Update for game version 1.3.6f1
   </ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/Cmyna/BetterMoonLight" />
