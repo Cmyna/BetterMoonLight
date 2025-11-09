@@ -24,26 +24,34 @@
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
 
 	<ItemGroup>
+		<Reference Include="Colossal.PSI.Common">
+		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\Colossal.PSI.Common.dll</HintPath>
+		  <Private>False</Private>
+		</Reference>
 		<Reference Include="Game">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Colossal.Core">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Colossal.Logging">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Colossal.IO.AssetDatabase">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Colossal.UI">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Colossal.UI.Binding">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Colossal.Localization">
-			<Private>false</Private>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Newtonsoft.Json">
+		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\Newtonsoft.Json.dll</HintPath>
+		  <Private>False</Private>
 		</Reference>
 		<Reference Include="Unity.RenderPipelines.Core.Runtime">
 		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
@@ -54,31 +62,42 @@
 		  <Private>False</Private>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Unity.Burst">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Unity.Collections">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Unity.Entities">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Unity.Mathematics">
-			<Private>false</Private>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEngine.ImageConversionModule">
+		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+		  <Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEngine.IMGUIModule">
+		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+		  <Private>False</Private>
 		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
+		<Reference Update="E:\Program Files %28x86%29\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\mscorlib.dll">
+		  <Private>False</Private>
+		</Reference>
 		<Reference Update="System">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Update="System.Core">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 		<Reference Update="System.Data">
-			<Private>false</Private>
+			<Private>False</Private>
 		</Reference>
 	</ItemGroup>
 
@@ -90,6 +109,52 @@
     <Content Include="lang\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Moon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Moon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Resources\betterMoonLight.moonTextures.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\LICENSES.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Update="System.Drawing">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Update="System.IO.Compression.FileSystem">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Update="System.Numerics">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Update="System.Runtime.Serialization">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Update="System.Xml">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Update="System.Xml.Linq">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
   

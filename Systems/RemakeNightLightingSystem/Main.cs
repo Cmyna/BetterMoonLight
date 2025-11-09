@@ -2,16 +2,18 @@
 // file "RemakeNightLightingSystem.cs".
 // Licensed under MIT License.
 
+using BetterMoonLight.API;
+using BetterMoonLight.Utils;
 using Game;
-using Game.Debug;
 using Game.Rendering;
 using Game.Simulation;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace BetterMoonLight.Systems
 {
@@ -27,8 +29,6 @@ namespace BetterMoonLight.Systems
         public const string kNightAmbientLight = "NightLight"; // vanilla NightLight GO
         public const string kVolume = "RemakeNightLightingSystemVolume";
 
-        private const string kBetterMoonLightDebugTab = "BetterMoonLight";
-
         public const int VolumeDefaultPriority = 1500;
 
         public float VolumePriority
@@ -40,23 +40,9 @@ namespace BetterMoonLight.Systems
             set { if (volume != null) volume.priority = value;  }
         }
 
-        public bool dirty = false;
+        public IMoonTextureRenderer OverrideRenderer { get; set; } = null;
 
-
-        public bool ShowDebugOptions
-        {
-            set
-            {
-                if (!value)
-                {
-                    var panel = DebugManager.instance.GetPanel(kBetterMoonLightDebugTab, createIfNull: false, groupIndex: 0, overrideIfExist: false);
-                    DebugManager.instance.RemovePanel(panel);
-                } else
-                {
-                    CreateDebugPanel(Mod.Setting);
-                }
-            }
-        }
+        public IEnumerable<Func<bool>> PendingChanges;
 
         private PlanetarySystem planetarySystem;
 
@@ -70,10 +56,14 @@ namespace BetterMoonLight.Systems
 
         private PhysicallyBasedSky sky;
 
+        private Action RecoverSetting;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-            planetarySystem = Unity.Entities.World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PlanetarySystem>();
+            var world = Unity.Entities.World.DefaultGameObjectInjectionWorld;
+            planetarySystem = world.GetOrCreateSystemManaged<PlanetarySystem>();
+
             InitNightSkyLight();
             InitMoonDiskLight();
             InitMoonSpecularLight();
@@ -82,15 +72,25 @@ namespace BetterMoonLight.Systems
             volume = VolumeHelper.CreateVolume(kVolume, VolumeDefaultPriority);
             VolumeHelper.GetOrCreateVolumeComponent(volume, ref sky);
 
+            OnInitTextureControl();
+
+            Mod.Setting.onSettingsApplied += (s) =>
+            {
+                ToggleOverwrite();
+            };
+
+            PendingChanges = new List<Func<bool>>();
+            PendingChanges = PendingChanges.Append(ToggleOverwrite);
+
             Mod.log.Info("RemakeNightLightingSystem created");
         }
 
 
         protected override void OnUpdate()
         {
-            if (dirty)
+            if (PendingChanges != null && PendingChanges.Count() > 0)
             {
-                dirty = !ToggleOverwrite();
+                PendingChanges = PendingChanges.Where(e => !e());
             }
             if (Mod.Setting.OverwriteNightLighting)
             {
@@ -104,7 +104,6 @@ namespace BetterMoonLight.Systems
                 UpdateSpaceTextureEmmision();
             }
             UpdateAurora();
-            
         }
 
         private bool UpdateNightLightTransform()
@@ -140,6 +139,12 @@ namespace BetterMoonLight.Systems
             if (!TryGetLightData(out var nightLight, out var moonLight)) return false;
             moonDiskLight.transform.position = moonLight.transform.position;
             moonDiskLight.transform.rotation = moonLight.transform.rotation;
+
+            if (Mod.Setting.DoZRotation)
+            {
+                moonDiskLight.transform.rotation *= Quaternion.Euler(0, 0, Mod.Setting.ZRotation);
+            }
+            
             // follow the vanilla moon texture setting
             if (moonDiskLight.additionalData.surfaceTexture != moonLight.additionalData.surfaceTexture)
             {
@@ -149,10 +154,16 @@ namespace BetterMoonLight.Systems
             var moonDiskIntensity = Mod.Setting.MoonDiskIntensity;
             moonDiskLight.additionalData.angularDiameter = moonDiskSize;
             // moon disk intensity should related to its size
-            // relation is: standard_intensity = size * finetuneRatio
             var finetuneRatio = 0.01f;
             var finetuneBias = -0.0055f;
-            moonDiskLight.additionalData.intensity = (moonDiskSize * finetuneRatio + finetuneBias) * moonDiskIntensity;
+            moonDiskLight.additionalData.intensity = ((float)math.pow(moonDiskSize, 1.5) * finetuneRatio + finetuneBias) * moonDiskIntensity;
+
+            var targetTex = moonDiskLight.additionalData.surfaceTexture;
+            if (Mod.Setting.OverrideTexture && OverrideRenderer != null && targetTex is RenderTexture targetRenderTex)
+            {
+                OverrideRenderer.Render(targetRenderTex);
+            }
+            
             return true;
         }
 
@@ -175,6 +186,47 @@ namespace BetterMoonLight.Systems
             return true;
         }
 
+
+
+        private bool GetRecoverSetting()
+        {
+            if (!TryGetLightData(out var nightLight, out var moonLight))
+            {
+                return false;
+            }
+
+            var nightLight_affectDiffuse = nightLight.additionalData.affectDiffuse;
+            var nightLight_affectSpecular = nightLight.additionalData.affectSpecular;
+            var nightLight_affectsVolumetric = nightLight.additionalData.affectsVolumetric;
+            var nightLight_lightDimmer = nightLight.additionalData.lightDimmer;
+
+            var moonLight_affectDiffuse = moonLight.additionalData.affectDiffuse;
+            var moonLightt_affectSpecular = moonLight.additionalData.affectSpecular;
+            var moonLight_affectsVolumetric = moonLight.additionalData.affectsVolumetric;
+            var moonLight_lightDimmer = moonLight.additionalData.lightDimmer;
+            var moonLight_interactWithSky = moonLight.additionalData.interactsWithSky;
+
+            var moonLight_color = moonLight.light.color;
+            var nightLight_color = nightLight.light.color;
+
+            RecoverSetting = () =>
+            {
+                nightLight.light.color = nightLight_color;
+                nightLight.additionalData.affectDiffuse = nightLight_affectDiffuse;
+                nightLight.additionalData.affectSpecular = nightLight_affectSpecular;
+                nightLight.additionalData.affectsVolumetric = nightLight_affectsVolumetric;
+                nightLight.additionalData.lightDimmer = nightLight_lightDimmer;
+
+                moonLight.light.color = moonLight_color;
+                moonLight.additionalData.affectDiffuse = moonLight_affectDiffuse;
+                moonLight.additionalData.affectSpecular = moonLightt_affectSpecular;
+                moonLight.additionalData.affectsVolumetric = moonLight_affectsVolumetric;
+                moonLight.additionalData.interactsWithSky = moonLight_interactWithSky;
+                moonLight.additionalData.lightDimmer = moonLight_lightDimmer;
+            };
+
+            return true;
+        }
         
 
         /// <summary>
@@ -187,6 +239,8 @@ namespace BetterMoonLight.Systems
             {
                 return false;
             }
+            if (RecoverSetting == null && !GetRecoverSetting()) return false;
+            Mod.log.Info("toggle overwrite");
 
             if (Mod.Setting.OverwriteNightLighting)
             {
@@ -205,18 +259,7 @@ namespace BetterMoonLight.Systems
                 moonSpecularLight.light.enabled = true;
             } else
             {
-                nightLight.additionalData.affectDiffuse = true;
-                nightLight.additionalData.affectSpecular = true;
-                nightLight.additionalData.affectsVolumetric = true;
-                nightLight.additionalData.lightDimmer = 1;
-                nightLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(6750f);
-
-                moonLight.additionalData.affectDiffuse = true;
-                moonLight.additionalData.affectSpecular = false;
-                moonLight.additionalData.affectsVolumetric = true;
-                moonLight.additionalData.lightDimmer = 1;
-                moonLight.additionalData.interactsWithSky = true;
-                moonLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(6750f);
+                RecoverSetting();
 
                 nightSkyLight.light.enabled = false;
                 moonDiskLight.light.enabled = false;
@@ -269,9 +312,6 @@ namespace BetterMoonLight.Systems
             var spaceEmissionMultiplier = Mod.Setting.StarfieldEmmisionStrength;
             sky.spaceEmissionMultiplier.Override(spaceEmissionMultiplier);
         }
-
-
-        public void SetDirty() { dirty = true; }
 
 
         private bool TryGetLightData(out PlanetarySystem.LightData nightLight, out PlanetarySystem.LightData moonLight)
@@ -335,123 +375,6 @@ namespace BetterMoonLight.Systems
 
             moonDiskLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(6000f);
         }
-
-
-        private void CreateDebugPanel(Setting setting)
-        {
-            var panel = DebugManager.instance.GetPanel(kBetterMoonLightDebugTab, createIfNull: true, groupIndex: 0, overrideIfExist: true);
-            panel.children.Add(new List<Widget>
-            {
-                new BoolField
-                {
-                    displayName=nameof(Setting.OverwriteNightLighting),
-                    getter = () => setting.OverwriteNightLighting,
-                    setter = (v) => {  setting.OverwriteNightLighting = v; SetDirty(); },
-                },
-
-                new Button
-                {
-                    displayName = nameof(Setting.ResetModSettings),
-                    action = () =>
-                    {
-                        setting.SetDefaults();
-                        setting.Apply();
-                    },
-                },
-
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.NightSkyLight),
-                    getter = () => setting.NightSkyLight,
-                    setter = (v) => { setting.NightSkyLight = v; SetDirty(); },
-                    incStep = 0.05f, min = () => 0.05f, max = () => 15f
-                },
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.AmbientLight),
-                    getter = () => setting.AmbientLight,
-                    setter = (v) => { setting.AmbientLight = v; SetDirty(); },
-                    incStep = 0.05f, min = () => 0f, max = () => 15f
-                },
-                new FloatField
-                {
-                    displayName=nameof(Setting.NightLightTemperature),
-                    getter = () => setting.NightLightTemperature,
-                    setter = (v) => { setting.NightLightTemperature = v; SetDirty(); },
-                    incStep = 100f, min = () => 3500f, max = () => 10000f
-                },
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.MoonDirectionalLight),
-                    getter = () => setting.MoonDirectionalLight,
-                    setter = (v) => { setting.MoonDirectionalLight = v; SetDirty(); },
-                    incStep = 0.05f, min = () => 0, max = () => 15
-                },
-                new FloatField
-                {
-                    displayName=nameof(Setting.MoonTemperature),
-                    getter = () => setting.MoonTemperature,
-                    setter = (v) => { setting.MoonTemperature = v; SetDirty(); },
-                    incStep = 100, min = () => 3500, max = () => 10000
-                },
-
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.MoonDiskSize),
-                    getter = () => setting.MoonDiskSize,
-                    setter = (v) => { setting.MoonDiskSize = v; SetDirty(); },
-                    incStep = 0.05f, min = () => 0.05f, max = () => 10f
-                },
-                new FloatField
-                {
-                    displayName=nameof(Setting.MoonDiskIntensity),
-                    getter = () => setting.MoonDiskIntensity,
-                    setter = (v) => { setting.MoonDiskIntensity = v; SetDirty(); },
-                    incStep = 0.1f, min = () => 0.1f, max = () => 10f
-                },
-
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.MoonLightAveragerStrength),
-                    getter = () => setting.MoonLightAveragerStrength,
-                    setter = (v) => { setting.MoonLightAveragerStrength = v; SetDirty(); },
-                    incStep = 0.1f, min = () => 0, max = () => 1
-                },
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.StarfieldEmmisionStrength),
-                    getter = () => setting.StarfieldEmmisionStrength,
-                    setter = (v) => { setting.StarfieldEmmisionStrength = v; SetDirty(); },
-                    incStep = 0.05f, min = () => 0, max = () => 1
-                },
-
-
-                new IntField
-                {
-                    displayName=nameof(Setting.AuroraOverwriteLevel),
-                    getter = () => setting.AuroraOverwriteLevel,
-                    setter = (v) => {  setting.AuroraOverwriteLevel = v; SetDirty(); },
-                    incStep = 1, min = () => 0, max = () => 2
-                },
-
-                new FloatField
-                {
-                    displayName=nameof(Setting.AuroraIntensity),
-                    getter = () => setting.AuroraIntensity,
-                    setter = (v) => { setting.AuroraIntensity = v; SetDirty(); },
-                    incStep = 0.05f, min = () => 0, max = () => 10
-                },
-
-            });
-        }
-
-
 
     }
 

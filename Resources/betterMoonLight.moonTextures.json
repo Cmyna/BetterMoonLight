@@ -1,0 +1,10 @@
+{
+    "scope": "BetterMoonLight",
+    "assets": [
+        {
+            "name": "Moon",
+            "caption": "Moon",
+            "albedo": "Moon.png"
+        }
+    ]
+}

@@ -4,32 +4,27 @@
 
 using Colossal;
 using Colossal.IO.AssetDatabase;
-using Colossal.IO.AssetDatabase.Internal;
+using Colossal.Json;
 using Game.Modding;
 using Game.Settings;
 using Game.UI;
 using Game.UI.Widgets;
-using BetterMoonLight.Systems;
+using System;
 using System.Collections.Generic;
-using UnityEngine.Rendering.HighDefinition;
-using UnityEngine.Rendering.LookDev;
-using Game.UI.Localization;
-using System.Collections;
-using Unity.Entities;
 
 namespace BetterMoonLight
 {
+
     [FileLocation(nameof(BetterMoonLight))]
-    [SettingsUIShowGroupName(kgBasic, kgNight, kgAurora)]
-    public class Setting : ModSetting
+    [SettingsUIShowGroupName(kgBasic, kgNight, kgCustomTexture, kgAurora)]
+    public partial class Setting : ModSetting
     {
         public const string ksMain = "Main";
-
+        
         public const string kgBasic = "Basic";
         public const string kgNight = "Night";
         public const string kgAurora = "Aurora";
-
-        private RemakeNightLightingSystem _nightLightingSystem;
+        public const string kgCustomTexture = "CustomTexture";
 
         [SettingsUISection(ksMain, kgBasic)]
         public bool OverwriteNightLighting { get; set; } = true;
@@ -76,6 +71,20 @@ namespace BetterMoonLight
         [SettingsUISlider(min = 0f, max = 1f, step = 0.05f, unit = Unit.kFloatTwoFractions)]
         [SettingsUISection(ksMain, kgNight)]
         public float StarfieldEmmisionStrength { get; set; } = 0.5f;
+
+        [SettingsUISection(ksMain, kgNight)]
+        public bool OverrideTexture { get; set; } = true;
+
+
+        [SettingsUIHidden]
+        public string SelectedTexture { get; set; } = "BetterMoonLight.Moon";
+
+        [SettingsUIHidden]
+        public bool DoZRotation { get; set; } = false;
+
+        [SettingsUIHidden]
+        public float ZRotation { get; set; } = 0f;
+
 
 
         [SettingsUISection(ksMain, kgNight)]
@@ -129,23 +138,6 @@ namespace BetterMoonLight
         }
 
 
-        public override void Apply()
-        {
-            base.Apply();
-            if (_nightLightingSystem == null)
-            {
-                _nightLightingSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RemakeNightLightingSystem>();
-            }
-            if (_nightLightingSystem != null)
-            {
-                _nightLightingSystem.ShowDebugOptions = ShowOptionsInDeveloperPanel;
-                _nightLightingSystem.SetDirty();
-            }
-            
-        }
-
-
-
         public Setting(IMod mod) : base(mod) {}
 
 
@@ -154,12 +146,19 @@ namespace BetterMoonLight
             AmbientLight = 3.5f;
             NightSkyLight = 1f;
             MoonDirectionalLight = 4f;
-            MoonDiskSize = 1.5f;
+            MoonDiskSize = 3f;
             MoonDiskIntensity = 1f;
             NightLightTemperature = 6750f;
             MoonTemperature = 7200f;
             MoonLightIntensityBalance = false;
             StarfieldEmmisionStrength = 0.5f;
+        }
+
+
+        public void Update(Action<Setting> update)
+        {
+            update(this);
+            this.Apply();
         }
 
     }
@@ -180,6 +179,7 @@ namespace BetterMoonLight
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgBasic), "Basic" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgNight), "Night Settings" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgAurora), "Aurora" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.kgCustomTexture), "Custom Texture" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show Options in Developer Panel" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show same settings in developer panel (launch with argument '-developerMode' and open by hotkey tab). Then you can see a new tab 'BetterMoonLight' in panel" },
@@ -198,6 +198,8 @@ namespace BetterMoonLight
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.MoonLightIntensityBalance)), "Balance Moon Light Intensity" },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OverrideTexture)), "Override Texture" },
+
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ResetModSettings)), "Reset To Default" },
                 { m_Setting.GetOptionWarningLocaleID(nameof(Setting.ResetModSettings)), "Are you sure set to default?" },
 
@@ -210,6 +212,16 @@ namespace BetterMoonLight
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]", "Not Overwrite" },
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]", "Overwrite Basic" },
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]", "Overwrite PhotoMode" },
+
+                // CustomTexture
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureDir) ), "Textures Directory" },
+                {
+                    m_Setting.GetOptionDescLocaleID(nameof(Setting.CustomTextureDir) ), 
+                    "Specify directory that stores Albedo&Normal images for moon." +
+                    "The Albedo and Normal images need to be named 'albedo.png' and 'normal.png' (Only PNG Formate Supported)."  +
+                    "Albedo image is necessary, Normal image file is optional."
+                },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureSphereLit) ), "Shpere Illumination" },
             };
         }
 
@@ -217,5 +229,17 @@ namespace BetterMoonLight
         {
 
         }
+    }
+
+
+    // Setting Property for Custom Texture 
+    public partial class Setting : ModSetting
+    {
+        [SettingsUISection(ksMain, kgCustomTexture)]
+        [SettingsUIDirectoryPicker]
+        public string CustomTextureDir { get; set; } = "";
+
+        [SettingsUISection(ksMain, kgCustomTexture)]
+        public bool CustomTextureSphereLit { get; set; } = false;
     }
 }
