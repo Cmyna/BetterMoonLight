@@ -37,6 +37,7 @@ namespace BetterMoonLight.Utils
 
         public static void Refresh()
         {
+            Mod.log.Debug("Load Debug UI");
             panel = DebugManager.instance.GetPanel(
                 "BetterMoonLight",
                 createIfNull: true,
@@ -176,7 +177,10 @@ namespace BetterMoonLight.Utils
             });
 
             DebugUI.Widget widget;
-            if (getTexSelection != null && getTexSelection(out widget)) panel.children.Add(widget);
+            if (getTexSelection != null && getTexSelection(out widget))
+            {
+                panel.children.Add(widget);
+            }
         }
 
 
@@ -210,7 +214,7 @@ namespace BetterMoonLight.Utils
                 var texLoader = getTexLoader();
                 var setting = getSetting();
 
-                if (texLoader != null || setting != null) return false;
+                if (texLoader == null || setting == null) return false;
 
                 var values = texLoader.Selections.ToArray();
 
@@ -218,7 +222,7 @@ namespace BetterMoonLight.Utils
 
                 res = new DebugUI.EnumField 
                 {
-                    displayName = "select texture",
+                    displayName = "SelectTexture",
                     getter = () => GetIndex(),
                     setter = (v) => SetValue(v),
                     enumNames = values.Select(s => new GUIContent(s)).ToArray(),

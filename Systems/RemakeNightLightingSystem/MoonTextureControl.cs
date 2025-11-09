@@ -60,7 +60,10 @@ namespace BetterMoonLight.Systems
 
         private void UpdateCustomConfig(Setting s)
         {
-            Mod.log.Info($"Update Custom Texture Dir: {s.CustomTextureDir}");
+            if (s.CustomTextureDir != customConfig.FolderPath)
+            {
+                Mod.log.Info($"Update Custom Texture Dir: {s.CustomTextureDir}");
+            }
             customConfig.FolderPath = s.CustomTextureDir;
             customConfig.sphericalRender = s.CustomTextureSphereLit;
         }
