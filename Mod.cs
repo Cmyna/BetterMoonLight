@@ -14,6 +14,7 @@ using Unity.Entities;
 using BetterMoonLight.Utils;
 using Colossal.PSI.Environment;
 using System.IO;
+using System.Linq;
 
 namespace BetterMoonLight
 {
@@ -23,6 +24,7 @@ namespace BetterMoonLight
         public static ILog log = LogManager.GetLogger($"{nameof(BetterMoonLight)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         public static Setting Setting;
         public static TextureLoader TextureLoader;
+        public static TextureLoader.Config customConfig;
 
         public RemakeNightLightingSystem nightLightingSystem;
 
@@ -36,13 +38,23 @@ namespace BetterMoonLight
                 log.Info($"Current mod asset at {asset.path}");
             }
 
-
             TextureLoader = new TextureLoader();
-            // load from local mod
-            TextureLoader.RecursiveLoadFromDir(Path.Combine(EnvPath.kUserDataPath, "Mods"));
-            // load from subscribed mod
-            TextureLoader.RecursiveLoadFromDir(Path.Combine(EnvPath.kCacheDataPath, "Mods/mods_subscribed"));
-
+            TextureLoader.onLoadConfigs += (loader) =>
+            {
+                // add custom config
+                loader.AddConfig(new TextureLoader.Config
+                {
+                    name = "BetterMoonLight.Custom",
+                    caption = "Custom Texture",
+                    albedo = "albedo.png",
+                    normal = "normal.png",
+                    sphericalRender = Setting.CustomTextureSphereLit,
+                    FolderPath = Setting.CustomTextureDir,
+                });
+                // load from local mod and subscribed mod
+                loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kUserDataPath, "Mods"));
+                loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kCacheDataPath, "Mods/mods_subscribed"));
+            };
 
             Setting = new Setting(this);
             Setting.RegisterInOptionsUI();
@@ -62,11 +74,10 @@ namespace BetterMoonLight
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.Rendering);
 
             // updateSystem.UpdateAt<RemakeNightLightingUISystem>(SystemUpdatePhase.UIUpdate);
-
-
             AssetDatabase.global.LoadSettings(nameof(BetterMoonLight), Setting, new Setting(this));
-            Setting.Apply();
             log.Info("Setting Loaded");
+            TextureLoader.LoadConfigs();
+            Setting.Apply();
         }
 
         public void OnDispose()

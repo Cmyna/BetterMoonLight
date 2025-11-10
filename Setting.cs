@@ -11,9 +11,13 @@ using Game.UI;
 using Game.UI.Widgets;
 using System;
 using System.Collections.Generic;
+using Unity.Entities.UniversalDelegates;
 
 namespace BetterMoonLight
 {
+
+    public delegate void OnSelectTexture(Setting setting);
+
 
     [FileLocation(nameof(BetterMoonLight))]
     [SettingsUIShowGroupName(kgBasic, kgNight, kgCustomTexture, kgAurora)]
@@ -75,10 +79,9 @@ namespace BetterMoonLight
         [SettingsUISection(ksMain, kgNight)]
         public bool OverrideTexture { get; set; } = true;
 
-
         [SettingsUIHidden]
         public string SelectedTexture { get; set; } = "BetterMoonLight.Moon";
-
+        
         [SettingsUIHidden]
         public bool DoZRotation { get; set; } = false;
 

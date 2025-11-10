@@ -14,8 +14,6 @@ namespace BetterMoonLight.Systems
     {
         private VanillaMimic defaultRenderer;
 
-        private TextureLoader.Config customConfig;
-
         protected void OnInitTextureControl()
         {
             var cameraUpdateSystem = World.GetOrCreateSystemManaged<CameraUpdateSystem>();
@@ -24,23 +22,11 @@ namespace BetterMoonLight.Systems
             defaultRenderer = new VanillaMimic(cameraUpdateSystem, planetarySystem);
             OverrideRenderer = defaultRenderer;
 
-            // init custom config
-            customConfig = new TextureLoader.Config
-            {
-                name = "BetterMoonLight.Custom",
-                caption = "Custom Texture",
-                albedo = "albedo.png",
-                normal = "normal.png",
-                sphericalRender = Mod.Setting.CustomTextureSphereLit,
-                FolderPath = Mod.Setting.CustomTextureDir,
-            };
-            Mod.TextureLoader.AddConfig(customConfig);
-
             // register setting change event listener
             Mod.Setting.onSettingsApplied += (s) =>
             {
                 var setting = (Setting)s;
-                UpdateCustomConfig(setting);
+
                 UpdateTexture(setting.SelectedTexture);
             };
         }
@@ -53,19 +39,9 @@ namespace BetterMoonLight.Systems
             var normal = Mod.TextureLoader.GetNormal(key);
             if (normal == null) return;
 
+            // Mod.log.Info("RemakeNightLightingSystem: Update Texture " + key);
             defaultRenderer.SetAlbedo(albedo);
             defaultRenderer.SetNormal(normal);
-        }
-
-
-        private void UpdateCustomConfig(Setting s)
-        {
-            if (s.CustomTextureDir != customConfig.FolderPath)
-            {
-                Mod.log.Info($"Update Custom Texture Dir: {s.CustomTextureDir}");
-            }
-            customConfig.FolderPath = s.CustomTextureDir;
-            customConfig.sphericalRender = s.CustomTextureSphereLit;
         }
     }
 }

@@ -240,7 +240,6 @@ namespace BetterMoonLight.Systems
                 return false;
             }
             if (RecoverSetting == null && !GetRecoverSetting()) return false;
-            Mod.log.Info("toggle overwrite");
 
             if (Mod.Setting.OverwriteNightLighting)
             {

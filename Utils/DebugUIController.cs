@@ -174,6 +174,16 @@ namespace BetterMoonLight.Utils
                     getter = () => Mod.Setting.OverrideTexture,
                     setter = (v) => {Mod.Setting.OverrideTexture = v; }
                 },
+
+                new DebugUI.Button
+                {
+                    displayName="ReloadTextures",
+                    action = () =>
+                    {
+                        Mod.TextureLoader?.LoadConfigs();
+                        Refresh();
+                    }
+                }
             });
 
             DebugUI.Widget widget;

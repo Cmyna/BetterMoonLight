@@ -2,16 +2,11 @@
 // file "TextureLoader.cs".
 // Licensed under MIT License.
 
-using BetterMoonLight.MoonTextureRenderers;
 using BetterMoonLight.Utils.TextureConverter;
-using Colossal.PSI.Environment;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace BetterMoonLight.Utils
@@ -41,7 +36,11 @@ namespace BetterMoonLight.Utils
         }
 
 
-        public IEnumerable<string> Selections { get => configs.Select(c => c.name); } 
+        public IEnumerable<string> Selections { get => configs.Select(c => c.name); }
+
+        public delegate void OnLoadConfigs(TextureLoader textureLoader);
+
+        public event OnLoadConfigs onLoadConfigs;
 
         private List<Config> configs;
 
@@ -60,6 +59,13 @@ namespace BetterMoonLight.Utils
         public void AddConfig(Config config)
         {
             configs.Add(config);
+        }
+
+
+        public void LoadConfigs()
+        {
+            Mod.log.Info("Load All Custom Texture Configs");
+            this.onLoadConfigs.Invoke(this);
         }
 
 
@@ -114,7 +120,8 @@ namespace BetterMoonLight.Utils
         }
 
 
-        private Texture2D LoadTexture(string key, string path) {
+        private Texture2D LoadTexture(string key, string path)
+        {
             if (!File.Exists(path)) return null;
 
             var tex = new Texture2D(2, 2);
