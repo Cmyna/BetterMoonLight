@@ -23,11 +23,16 @@ namespace BetterMoonLight.Systems
             OverrideRenderer = defaultRenderer;
 
             // register setting change event listener
+            string selectedTextureCache = null;
             Mod.Setting.onSettingsApplied += (s) =>
             {
                 var setting = (Setting)s;
-
-                UpdateTexture(setting.SelectedTexture);
+                // it is a heavy job, so only selection change will do update
+                if (selectedTextureCache != setting.SelectedTexture)
+                {
+                    selectedTextureCache = setting.SelectedTexture;
+                    UpdateTexture(setting.SelectedTexture); 
+                }
             };
         }
 
