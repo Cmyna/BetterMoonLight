@@ -61,10 +61,10 @@ namespace BetterMoonLight.Utils
             configs.Add(config);
         }
 
-
         public void LoadConfigs()
         {
             Mod.log.Info("Load All Custom Texture Configs");
+            this.configs.Clear();
             this.onLoadConfigs.Invoke(this);
         }
 
