@@ -51,7 +51,7 @@ namespace BetterMoonLight
         public float MoonDirectionalLight { get; set; } = 4f;
 
 
-        [SettingsUISlider(min = 0.05f, max = 10f, step = 0.05f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISlider(min = 0.05f, max = 20f, step = 0.05f, unit = Unit.kFloatTwoFractions)]
         [SettingsUISection(ksMain, kgNight)]
         public float MoonDiskSize { get; set; } = 1.5f;
 
