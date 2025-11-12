@@ -21,6 +21,8 @@ namespace BetterMoonLight
     public class Mod : IMod
     {
 
+        public static readonly string ModName = "BetterMoonLight";
+
         public static ILog log = LogManager.GetLogger($"{nameof(BetterMoonLight)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
         public static Setting Setting;
         public static TextureLoader TextureLoader;
@@ -72,8 +74,8 @@ namespace BetterMoonLight
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.EditorSimulation);
             updateSystem.UpdateAfter<RemakeNightLightingSystem>(SystemUpdatePhase.Rendering);
+            updateSystem.UpdateAt<BetterMoonLightUISystem>(SystemUpdatePhase.UIUpdate);
 
-            // updateSystem.UpdateAt<RemakeNightLightingUISystem>(SystemUpdatePhase.UIUpdate);
             AssetDatabase.global.LoadSettings(nameof(BetterMoonLight), Setting, new Setting(this));
             log.Info("Setting Loaded");
             TextureLoader.LoadConfigs();
