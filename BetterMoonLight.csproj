@@ -23,7 +23,15 @@
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
 
+  <Target Name="BuildUI" AfterTargets="AfterBuild">
+    <Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/better-moonlight" />
+  </Target>
+  
 	<ItemGroup>
+		<Reference Include="Colossal.Mathematics">
+		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\Colossal.Mathematics.dll</HintPath>
+		  <Private>False</Private>
+		</Reference>
 		<Reference Include="Colossal.PSI.Common">
 		  <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed\Colossal.PSI.Common.dll</HintPath>
 		  <Private>False</Private>
@@ -111,18 +119,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Resources\Moon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Moon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Resources\betterMoonLight.moonTextures.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\LICENSES.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Moon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -156,7 +159,5 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-
-  
 
 </Project>
