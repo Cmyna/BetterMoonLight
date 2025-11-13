@@ -1,0 +1,29 @@
+
+
+.main {
+    position: absolute;     
+    min-width: 300rem;   
+    min-height: 450rem; 
+}
+
+
+.header {
+    padding: 10rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 15rem;
+    margin-bottom: 10rem;
+}
+
+.slider {
+    min-width: 100rem;
+    max-width: 100rem;
+}
