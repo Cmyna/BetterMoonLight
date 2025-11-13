@@ -3,7 +3,6 @@
 // Licensed under MIT License.
 
 using BetterMoonLight.API;
-using BetterMoonLight.Utils;
 using Game;
 using Game.Rendering;
 using Game.Simulation;
@@ -64,6 +63,9 @@ namespace BetterMoonLight.Systems
             var world = Unity.Entities.World.DefaultGameObjectInjectionWorld;
             planetarySystem = world.GetOrCreateSystemManaged<PlanetarySystem>();
 
+            PendingChanges = new List<Func<bool>>();
+            PendingChanges = PendingChanges.Append(ToggleOverwrite);
+
             InitNightSkyLight();
             InitMoonDiskLight();
             InitMoonSpecularLight();
@@ -78,9 +80,6 @@ namespace BetterMoonLight.Systems
             {
                 ToggleOverwrite();
             };
-
-            PendingChanges = new List<Func<bool>>();
-            PendingChanges = PendingChanges.Append(ToggleOverwrite);
 
             Mod.log.Info("RemakeNightLightingSystem created");
         }
@@ -153,11 +152,8 @@ namespace BetterMoonLight.Systems
             var moonDiskSize = Mod.Setting.MoonDiskSize;
             var moonDiskIntensity = Mod.Setting.MoonDiskIntensity;
             moonDiskLight.additionalData.angularDiameter = moonDiskSize;
-            // moon disk intensity should related to its size
-            var finetuneRatio = 0.01f;
-            var finetuneBias = -0.0055f;
-            moonDiskLight.additionalData.intensity = ((float)math.pow(moonDiskSize, 1.5) * finetuneRatio + finetuneBias) * moonDiskIntensity;
-
+            moonDiskLight.additionalData.intensity = DiskSizeIntensityMultiplier(moonDiskSize) * moonDiskIntensity;
+            
             var targetTex = moonDiskLight.additionalData.surfaceTexture;
             if (Mod.Setting.OverrideTexture && OverrideRenderer != null && targetTex is RenderTexture targetRenderTex)
             {
@@ -278,8 +274,14 @@ namespace BetterMoonLight.Systems
         {
             if (planetarySystem.MoonLight.transform == null) return false;
             if (moonSpecularLight.transform == null) return false;
+            
             moonSpecularLight.transform.position = planetarySystem.MoonLight.transform.position;
             moonSpecularLight.transform.rotation = planetarySystem.MoonLight.transform.rotation;
+            moonSpecularLight.additionalData.angularDiameter = Mod.Setting.MoonDiskSize;
+            moonSpecularLight.additionalData.intensity = (
+                DiskSizeIntensityMultiplier(Mod.Setting.MoonDiskSize) * 
+                math.min(Mod.Setting.MoonDiskIntensity * 8f, 40)
+            );
             return true;
         }
 
@@ -293,7 +295,7 @@ namespace BetterMoonLight.Systems
             }
             nightLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(nightLightTempature);
             moonLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
-            moonSpecularLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
+            // moonSpecularLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
             nightSkyLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(directLightTemperature);
             return true;
         }
@@ -361,7 +363,7 @@ namespace BetterMoonLight.Systems
             Utils.CreateDirectionalLight(kMoonDiskLight, out moonDiskLight);
             var additionalData = moonDiskLight.additionalData;
             additionalData.affectDiffuse = false;
-            additionalData.affectSpecular = true;
+            additionalData.affectSpecular = false;
             additionalData.affectsVolumetric = true;
             additionalData.interactsWithSky = true;
             additionalData.lightlayersMask = LightLayerEnum.LightLayerDefault;
@@ -374,6 +376,15 @@ namespace BetterMoonLight.Systems
 
             moonDiskLight.light.color = Mathf.CorrelatedColorTemperatureToRGB(6000f);
         }
+
+
+        private static float DiskSizeIntensityMultiplier(float diskSize)
+        {
+            var finetuneRatio = 0.01f;
+            var finetuneBias = -0.0055f;
+            return (float)math.pow(diskSize, 1.5) * finetuneRatio + finetuneBias;
+        }
+
 
     }
 
