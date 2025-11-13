@@ -126,7 +126,16 @@ namespace BetterMoonLight.Systems
 
             public override int GetHashCode(IEnumerable<string> obj)
             {
-                return obj?.Sum(x => x.GetHashCode()) ?? 0;
+                if (obj == null) return 0;
+                var hash = new HashCode();
+                int index = 0;
+                foreach (var item in obj)
+                {
+                    hash.Add(index);
+                    hash.Add(item);
+                    index++;
+                }
+                return hash.ToHashCode();
             }
 
             public void Write(IJsonWriter writer, IEnumerable<string> selections)
