@@ -20,7 +20,7 @@ namespace BetterMoonLight
 
 
     [FileLocation(nameof(BetterMoonLight))]
-    [SettingsUIShowGroupName(kgBasic, kgNight, kgCustomTexture, kgAurora)]
+    [SettingsUIShowGroupName(kgBasic, kgNight, kgTexture, kgAurora)]
     public partial class Setting : ModSetting
     {
         public const string ksMain = "Main";
@@ -28,7 +28,7 @@ namespace BetterMoonLight
         public const string kgBasic = "Basic";
         public const string kgNight = "Night";
         public const string kgAurora = "Aurora";
-        public const string kgCustomTexture = "CustomTexture";
+        public const string kgTexture = "Texture";
 
         [SettingsUISection(ksMain, kgBasic)]
         public bool OverwriteNightLighting { get; set; } = true;
@@ -76,11 +76,7 @@ namespace BetterMoonLight
         [SettingsUISection(ksMain, kgNight)]
         public float StarfieldEmmisionStrength { get; set; } = 0.5f;
 
-        [SettingsUISection(ksMain, kgNight)]
-        public bool OverrideTexture { get; set; } = true;
-
-        [SettingsUIHidden]
-        public string SelectedTexture { get; set; } = "BetterMoonLight.Moon";
+        
         
         [SettingsUIHidden]
         public bool DoZRotation { get; set; } = false;
@@ -182,7 +178,7 @@ namespace BetterMoonLight
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgBasic), "Basic" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgNight), "Night Settings" },
                 { m_Setting.GetOptionGroupLocaleID(Setting.kgAurora), "Aurora" },
-                { m_Setting.GetOptionGroupLocaleID(Setting.kgCustomTexture), "Custom Texture" },
+                { m_Setting.GetOptionGroupLocaleID(Setting.kgTexture), "Texture" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show Options in Developer Panel" },
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show same settings in developer panel (launch with argument '-developerMode' and open by hotkey tab). Then you can see a new tab 'BetterMoonLight' in panel" },
@@ -201,8 +197,6 @@ namespace BetterMoonLight
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.MoonLightIntensityBalance)), "Balance Moon Light Intensity" },
 
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OverrideTexture)), "Override Texture" },
-
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.ResetModSettings)), "Reset To Default" },
                 { m_Setting.GetOptionWarningLocaleID(nameof(Setting.ResetModSettings)), "Are you sure set to default?" },
 
@@ -211,6 +205,9 @@ namespace BetterMoonLight
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.StarfieldEmmisionStrength) ), "Star Field Emission Strength" },
 
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OverrideTexture)), "Override Moon Texture" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.SelectedTexture)), "Select Texture" },
+
                 // overwrite level drop down items locale
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]", "Not Overwrite" },
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]", "Overwrite Basic" },
@@ -218,12 +215,6 @@ namespace BetterMoonLight
 
                 // CustomTexture
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureDir) ), "Textures Directory" },
-                {
-                    m_Setting.GetOptionDescLocaleID(nameof(Setting.CustomTextureDir) ), 
-                    "Specify directory that stores Albedo&Normal images for moon." +
-                    "The Albedo and Normal images need to be named 'albedo.png' and 'normal.png' (Only PNG Formate Supported)."  +
-                    "Albedo image is necessary, Normal image file is optional."
-                },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureSphereLit) ), "Shpere Illumination" },
             };
         }
@@ -238,11 +229,18 @@ namespace BetterMoonLight
     // Setting Property for Custom Texture 
     public partial class Setting : ModSetting
     {
-        [SettingsUISection(ksMain, kgCustomTexture)]
+
+        [SettingsUISection(ksMain, kgTexture)]
+        public bool OverrideTexture { get; set; } = true;
+
+        [SettingsUIHidden]
+        public string SelectedTexture { get; set; } = "BetterMoonLight.Moon";
+
+        [SettingsUISection(ksMain, kgTexture)]
         [SettingsUIDirectoryPicker]
         public string CustomTextureDir { get; set; } = "";
 
-        [SettingsUISection(ksMain, kgCustomTexture)]
+        [SettingsUISection(ksMain, kgTexture)]
         public bool CustomTextureSphereLit { get; set; } = false;
     }
 }

@@ -14,12 +14,3 @@ export const useBinding = <T>(name: string): [T, (v: T) => void] => {
 export const useTrigger = <T>(name: string): (v: T) => void => {
     return (v) => trigger(mod.id, "Set" + name, v)
 }
-
-
-export const useObjectBinding = <T>(name: string): [T, (v: T) => void] => {
-    const binding = bindValue<string>(mod.id, name)
-    return [
-        JSON.parse(useValue<string>(binding)), 
-        (v) => trigger(mod.id, "Set" + name, JSON.stringify(v))
-    ]
-}

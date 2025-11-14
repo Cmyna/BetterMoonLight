@@ -1,51 +1,67 @@
 {
-    "Options.SECTION[BetterMoonLight.BetterMoonLight.Mod]": "Better Moon Light",
+  "Options.SECTION[BetterMoonLight.BetterMoonLight.Mod]": "Better Moon Light",
 
-    "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Basic]": "Basic",
-    "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Night]": "Night Light Settings",
-    "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Aurora]": "Aurora",
+  "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Basic]": "Basic",
+  "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Night]": "Night Light Settings",
+  "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Aurora]": "Aurora",
+  "Options.GROUP[BetterMoonLight.BetterMoonLight.Mod.Texture]": "Texture",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "Overwrite Night Lighting",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "Enable this option to open the modifition of night lighting from this mod",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "Overwrite Night Lighting",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "Enable this option to open the modifition of night lighting from this mod",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ResetModSettings]": "Reset Mod Settings",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ResetModSettings]": "Reset to mod default (Modifition) setting",
-    "Options.WARNING[BetterMoonLight.BetterMoonLight.Mod.Setting.ResetModSettings]": "Reset to default settings?",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ShowOptionsInDeveloperPanel]": "Show Options in Developer Panel",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ShowOptionsInDeveloperPanel]": "Show same settings in developer panel (launch with argument '-developerMode' and open by hotkey tab). Then you can see a new tab 'BetterMoonLight' in panel",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AmbientLight]": "Ambient Light Intensity",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AmbientLight]": "Control ambient light strength",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ResetModSettings]": "Reset Mod Settings",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ResetModSettings]": "Reset to mod default (Modifition) setting",
+  "Options.WARNING[BetterMoonLight.BetterMoonLight.Mod.Setting.ResetModSettings]": "Reset to default settings?",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightSkyLight]": "Night Sky Intensity",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightSkyLight]": "Control night sky intensity",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AmbientLight]": "Ambient Light Intensity",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AmbientLight]": "Control ambient light strength",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDirectionalLight]": "Direct Moon Light Intensity",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDirectionalLight]": "Control direct moon light intensity",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightSkyLight]": "Night Sky Intensity",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightSkyLight]": "Control night sky intensity",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskSize]": "Moon Disk Size",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskSize]": "Control moon disk size",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDirectionalLight]": "Direct Moon Light Intensity",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDirectionalLight]": "Control direct moon light intensity",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskIntensity]": "Moon Disk Intensity",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskIntensity]": "Control moon disk intensity",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskSize]": "Moon Disk Size",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskSize]": "Control moon disk size",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "Ambient Light Temperature",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "Control ambient night lighting temperature (Kelvin unit)",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskIntensity]": "Moon Disk Intensity",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonDiskIntensity]": "Control moon disk intensity",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "Moon Light Temperature",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "Control moon light temperature(Kelvin unit)",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "Ambient Light Temperature",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.NightLightTemperature]": "Control ambient night lighting temperature (Kelvin unit)",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.StarfieldEmmisionStrength]": "Starfield Emmision Strength",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.StarfieldEmmisionStrength]": "Control Starfield Emmision Strength, may be useful in some case. 0 will make night sky looks boring?",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "Moon Light Temperature",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonTemperature]": "Control moon light temperature(Kelvin unit)",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "Intensity Balance",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "Enable this option to balance the brightness of moonlight in the evening and midnight sky",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.StarfieldEmmisionStrength]": "Starfield Emmision Strength",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.StarfieldEmmisionStrength]": "Control Starfield Emmision Strength, may be useful in some case. 0 will make night sky looks boring?",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraOverwriteLevel]": "Overwrite Aurora",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraOverwriteLevel]": "Enable this to overwrite aurora setting (can select overwrite photo mode or not)",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "Intensity Balance",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.MoonLightIntensityBalance]": "Enable this option to balance the brightness of moonlight in the evening and midnight sky",
 
-    "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraIntensity]": "Aurora Intensity",
-    "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraIntensity]": "Control Aurora Intensity",
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraOverwriteLevel]": "Overwrite Aurora",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraOverwriteLevel]": "Enable this to overwrite aurora setting (can select overwrite photo mode or not)",
 
-    "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]": "Not Overwrite",
-    "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]": "Overwrite(Not Include PhotoMode)",
-    "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]": "Overwrite All(Include PhotoMode)"
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraIntensity]": "Aurora Intensity",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.AuroraIntensity]": "Control Aurora Intensity",
+
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.SelectedTexture]": "Select Texture",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.SelectedTexture]": "Select Moon Texture",
+
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverrideTexture]": "Override Moon Texture",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverrideTexture]": "Enable This to Override Moon Texture",
+
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureDir]": "Select Custom Texture Directory",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureDir]": "Specify directory that stores Albedo&Normal images for moon. The Albedo and Normal images need to be named 'albedo.png' and 'normal.png' (Only PNG Formate Supported). Albedo image file is neccesary and normal file is optional when using custom texture.",
+
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureSphereLit]": "Shpere Illumination",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureSphereLit]": "Specify use Shpere Illumination When Custom Texture is used",
+
+  "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]": "Not Overwrite",
+  "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]": "Overwrite(Not Include PhotoMode)",
+  "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]": "Overwrite All(Include PhotoMode)"
 }

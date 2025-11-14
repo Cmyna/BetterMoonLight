@@ -6,7 +6,8 @@ import {
 } from "cs2/ui"
 import styles from 'css/panel.module.scss'
 import { CSSProperties, ReactNode, useState } from "react";
-import { useBinding, useObjectBinding, useTrigger } from "utils/bindings"
+import { useBinding, useTrigger } from "utils/bindings"
+import { useSettingOptionTranslate } from "utils/translations";
 
 
 const COMPONENTS_PATH = "game-ui/game/components"
@@ -16,6 +17,10 @@ const FOCUS_DISABLED = getModule("game-ui/common/focus/focus-key.ts", "FOCUS_DIS
 
 
 export const Main = () => {
+
+    const {
+        transOptionName, transOptionGroup, optionSection
+    } = useSettingOptionTranslate();
 
     // control panel position
     const [pos, setPos] = useState({x: 10, y: 60})
@@ -27,11 +32,12 @@ export const Main = () => {
     const [overrideNightLighting, setOverrideNightNightling] = useBinding<boolean>("OverrideNightLighting");
     const reset = useTrigger("Reset");
 
+    const Checkbox = getModule("game-ui/common/input/toggle/checkbox/checkbox.tsx", "Checkbox");
+
     const defaultStyle = getModule("game-ui/common/panel/themes/default.module.scss", "classes");
     const { closeButton } = getModule("game-ui/common/panel/panel.module.scss", "classes");
     const { button: btnRoundHighLight } = getModule("game-ui/common/input/button/themes/round-highlight-button.module.scss", "classes");
-    const DropdownStyle = getModule("game-ui/menu/themes/dropdown.module.scss", "classes");
-    const Checkbox = getModule("game-ui/common/input/toggle/checkbox/checkbox.tsx", "Checkbox");
+    const dropdownStyle = getModule("game-ui/menu/themes/dropdown.module.scss", "classes");
     const { button: buttonAnim } = getModule("game-ui/menu/widgets/button/button.module.scss", "classes")
     const { button: secondaryBtnStyle } = getModule("game-ui/menu/themes/secondary-button.module.scss", "classes")
 
@@ -60,7 +66,7 @@ export const Main = () => {
         >
             <div className={`${defaultStyle.header} ${styles.header}`}>
                 <div style={{ minWidth: "10rem", minHeight: "5rem" }}></div>
-                <div>Better MoonLight</div>
+                <div>{optionSection}</div>
                 <Button 
                     style={{color: "white"}}
                     className={`${closeButton} ${btnRoundHighLight}`} 
@@ -72,9 +78,9 @@ export const Main = () => {
             <Scrollable>
                 {/* Basic Section */}
                 <InfoViewSectionMod>
-                    <Header title="Basic"/>
+                    <Header title={transOptionGroup("Basic")}/>
                     <div className={styles.row}>
-                        <span>Override Night Lighting</span>
+                        <span>{transOptionName("OverwriteNightLighting")}</span>
                         <Checkbox 
                             focusKey={FOCUS_DISABLED}
                             checked={overrideNightLighting} 
@@ -82,21 +88,21 @@ export const Main = () => {
                         />
                     </div>
                     <div className={styles.row}>
-                        <div></div>
+                        <div/>
                         <button 
                             className={`${buttonAnim} ${secondaryBtnStyle}`} 
                             onClick={() => reset(true)}
                         >
-                            Reset Mod Settings
+                            {transOptionName("ResetModSettings")}
                         </button>
                     </div>
                 </InfoViewSectionMod>
 
                 {/* Texture Section */}
                 <InfoViewSectionMod>
-                    <Header title="Texture"/>
+                    <Header title={transOptionGroup("Texture")}/>
                     <div className={styles.row}>
-                        <span>Override Texture</span>
+                        <span>{transOptionName("OverrideTexture")}</span>
                         <Checkbox 
                             focusKey={FOCUS_DISABLED}
                             checked={overrideTexture} 
@@ -104,10 +110,10 @@ export const Main = () => {
                         />
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", marginBottom: "10rem" }}>
-                        <span style={{marginBottom: "10rem"}}>Select Texture</span>
+                        <span style={{marginBottom: "10rem"}}>{transOptionName("SelectedTexture")}</span>
                         <Dropdown 
                             focusKey={FOCUS_DISABLED}
-                            theme={DropdownStyle}
+                            theme={dropdownStyle}
                             content={selections}
                         >
                             <DropdownToggle disabled={false}>
@@ -119,7 +125,7 @@ export const Main = () => {
 
                 {/* Night Lighting Section */}
                 <InfoViewSectionMod>
-                    <Header title="Night Lighting"/>
+                    <Header title={transOptionGroup("Night")}/>
                     <SliderRow bindingName="AmbientLight" min={0} max={15} />
                     <SliderRow bindingName="NightSkyLight" min={0} max={15} />
                     <SliderRow bindingName="MoonDirectionalLight" min={0} max={15} />
@@ -167,6 +173,7 @@ const SliderRow = ({
     valueDisplay = (v) => v.toFixed(2)
 }: SliderRowProps) => {
 
+    const {transOptionName} = useSettingOptionTranslate({});
     const [value, setValue] = useBinding<number>(bindingName);
 
     const Slider = getModule("game-ui/common/input/slider/slider.tsx", "Slider");
@@ -182,10 +189,14 @@ const SliderRow = ({
         justifyContent: "space-between"
     }
 
+    if (!title) {
+        title = transOptionName(bindingName) ?? bindingName;
+    }
+
     return (
         <div style={{...colFlexStyle}}>
             <div style={{...row2ItemFlex, marginBottom: "5rem"}}>
-                <span style={{ fontSize: "15rem" }}>{title ? title : bindingName}</span>
+                <span style={{ fontSize: "15rem" }}>{title}</span>
                 <p style={{ fontSize: "13rem" }} >{valueDisplay(value)}</p>
             </div>
             <Slider 
