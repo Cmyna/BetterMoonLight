@@ -5,9 +5,10 @@ import {
     Scrollable, 
 } from "cs2/ui"
 import styles from 'css/panel.module.scss'
-import { CSSProperties, ReactNode, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useState } from "react";
 import { useBinding, useTrigger } from "utils/bindings"
 import { useSettingOptionTranslate } from "utils/translations";
+import { useMouseDrag as useDrag } from "utils/useDragging";
 
 
 const COMPONENTS_PATH = "game-ui/game/components"
@@ -23,14 +24,22 @@ export const Main = () => {
     } = useSettingOptionTranslate();
 
     // control panel position
-    const [pos, setPos] = useState({x: 10, y: 60})
+    const {
+        offset, reset: resetOffset,
+        eventListeners: { mouse: dragListeners }
+    } = useDrag();
     
     const [showSetting, setShowSetting] = useBinding<boolean>("ShowSetting");
     const [overrideTexture, setOverrideTexture] = useBinding<boolean>("OverrideTexture");
     const [selectedTexture, setSelectedTexture] = useBinding<string>("SelectedTexture");
     const [availableTextures] = useBinding<{selections: string[]}>("AvailableTextures");
     const [overrideNightLighting, setOverrideNightNightling] = useBinding<boolean>("OverrideNightLighting");
-    const reset = useTrigger("Reset");
+    const resetSettings = useTrigger("Reset");
+
+    // if hide and show setting, reset dragging offset
+    useEffect(() => {
+        resetOffset();
+    }, [showSetting]);
 
     const Checkbox = getModule("game-ui/common/input/toggle/checkbox/checkbox.tsx", "Checkbox");
 
@@ -60,11 +69,17 @@ export const Main = () => {
     });
 
     return (<>
-        {showSetting && <Panel 
-            style={{ left: `${pos.x}rem`, top: `${pos.y}rem` }}
+        {<Panel 
+            style={{ 
+                left: `${offset.x + 10}rem`, 
+                top: `${offset.y + 60}rem`,
+                // just make it invisble but not destroy whole components tree
+                // so some context (eg. scroll position) will be kept
+                visibility: showSetting ? "visible" : "hidden" 
+            }}
             className={styles.main}
         >
-            <div className={`${defaultStyle.header} ${styles.header}`}>
+            <div className={`${defaultStyle.header} ${styles.header}`} {...dragListeners}>
                 <div style={{ minWidth: "10rem", minHeight: "5rem" }}></div>
                 <div>{optionSection}</div>
                 <Button 
@@ -75,7 +90,7 @@ export const Main = () => {
                     tinted={true}
                 />
             </div>
-            <Scrollable>
+            <Scrollable style={{maxHeight: "500rem"}}>
                 {/* Basic Section */}
                 <InfoViewSectionMod>
                     <Header title={transOptionGroup("Basic")}/>
@@ -91,7 +106,7 @@ export const Main = () => {
                         <div/>
                         <button 
                             className={`${buttonAnim} ${secondaryBtnStyle}`} 
-                            onClick={() => reset(true)}
+                            onClick={() => resetSettings(true)}
                         >
                             {transOptionName("ResetModSettings")}
                         </button>
