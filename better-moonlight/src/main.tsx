@@ -1,3 +1,4 @@
+import { useLocalization } from "cs2/l10n";
 import { getModule } from "cs2/modding";
 import { 
     Button, Panel, Dropdown, 
@@ -22,6 +23,10 @@ export const Main = () => {
     const {
         transOptionName, transOptionGroup, optionSection
     } = useSettingOptionTranslate();
+    const { translate } = useLocalization();
+    const translateTexSelectionName = (key: string) => {
+        return translate(`BetterMoonLight.Texture[${key}]`) ?? key;
+    }
 
     // control panel position
     const {
@@ -63,7 +68,7 @@ export const Main = () => {
                 key={selection} 
                 value={selection}
             >
-                {selection}
+                {translateTexSelectionName(selection)}
             </DropdownItem>
         )
     });
@@ -132,7 +137,7 @@ export const Main = () => {
                             content={selections}
                         >
                             <DropdownToggle disabled={false}>
-                                <div>{selectedTexture}</div>
+                                <div>{translateTexSelectionName(selectedTexture)}</div>
                             </DropdownToggle>
                         </Dropdown>
                     </div>

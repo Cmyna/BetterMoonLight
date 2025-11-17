@@ -63,5 +63,8 @@
 
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]": "不覆盖",
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]": "覆盖(不覆盖照片模式)",
-  "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]": "覆盖(覆盖照片模式)"
+  "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]": "覆盖(覆盖照片模式)",
+
+  "BetterMoonLight.Texture[BetterMoonLight.Custom]": "自定义纹理",
+  "BetterMoonLight.Texture[BetterMoonLight.Moon]": "月球"
 }

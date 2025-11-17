@@ -216,6 +216,9 @@ namespace BetterMoonLight
                 // CustomTexture
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureDir) ), "Textures Directory" },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureSphereLit) ), "Shpere Illumination" },
+
+                { "BetterMoonLight.Texture[BetterMoonLight.Custom]", "Custom Texture" },
+                { "BetterMoonLight.Texture[BetterMoonLight.Moon]", "Moon" }
             };
         }
 
