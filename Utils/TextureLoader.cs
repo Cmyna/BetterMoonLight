@@ -69,6 +69,14 @@ namespace BetterMoonLight.Utils
         }
 
 
+        public bool UseSphericalLitRender(string key)
+        {
+            var config = configs.Find(c => key.Equals(c.name));
+            if (config == null) return true;
+            return config.sphericalRender;
+        }
+
+
         public Texture2D GetAlbedo(string key)
         {
             var config = configs.Find(c => key.Equals(c.name));

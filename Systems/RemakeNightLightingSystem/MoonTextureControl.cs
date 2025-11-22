@@ -50,7 +50,7 @@ namespace BetterMoonLight.Systems
             // Mod.log.Info("RemakeNightLightingSystem: Update Texture " + key);
             defaultRenderer.SetAlbedo(albedo);
             defaultRenderer.SetNormal(normal);
-
+            defaultRenderer.UseSphericalRender = () => Mod.TextureLoader.UseSphericalLitRender(key);
             moonTextureColor = CalcMoonTextureColor(albedo);
         }
 

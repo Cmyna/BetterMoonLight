@@ -280,7 +280,7 @@ namespace BetterMoonLight.Systems
             moonSpecularLight.additionalData.angularDiameter = Mod.Setting.MoonDiskSize;
             moonSpecularLight.additionalData.intensity = (
                 DiskSizeIntensityMultiplier(Mod.Setting.MoonDiskSize) * 
-                math.min(Mod.Setting.MoonDiskIntensity * 8f, 40)
+                math.min(Mod.Setting.MoonDiskIntensity * 10f, 40)
             );
             return true;
         }

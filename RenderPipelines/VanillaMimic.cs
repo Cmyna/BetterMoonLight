@@ -35,7 +35,7 @@ namespace BetterMoonLight.MoonTextureRenderers
 
         private Texture2D normal;
 
-        public bool SphericalRender { get; set; } = true;
+        public Func<bool> UseSphericalRender { get; set; } = () => true;
 
 
 
@@ -73,7 +73,7 @@ namespace BetterMoonLight.MoonTextureRenderers
 
         public bool Render(RenderTexture target)
         {
-            if (SphericalRender)
+            if (UseSphericalRender())
             {
                 return SphericalLitRender(target);
             }
