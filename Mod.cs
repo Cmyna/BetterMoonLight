@@ -55,19 +55,8 @@ namespace BetterMoonLight
             AssetDatabase.global.LoadSettings(nameof(BetterMoonLight), Setting, new Setting(this));
             log.Info("Setting Loaded");
 
-            var customTextureConfig = new TextureLoader.Config
-            {
-                name = "BetterMoonLight.Custom",
-                caption = "Custom Texture",
-                albedo = "albedo.png",
-                normal = "normal.png",
-                sphericalRender = Setting.CustomTextureSphereLit,
-                FolderPath = Setting.CustomTextureDir,
-            };
             TextureLoader.onLoadConfigs += (loader) =>
             {
-                // add custom config
-                loader.AddConfig(customTextureConfig);
                 // load from local mod and subscribed mod
                 loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kUserDataPath, "Mods"));
                 loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kCacheDataPath, "Mods/mods_subscribed"));
@@ -76,7 +65,6 @@ namespace BetterMoonLight
             Setting.onSettingsApplied += (setting) =>
             {
                 DebugUIController.UpdateDebugOption(Mod.Setting.ShowOptionsInDeveloperPanel);
-                customTextureConfig.sphericalRender = Mod.Setting.CustomTextureSphereLit;
             };
 
             TextureLoader.LoadConfigs();

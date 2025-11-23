@@ -213,10 +213,6 @@ namespace BetterMoonLight
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]", "Overwrite Basic" },
                 { "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]", "Overwrite PhotoMode" },
 
-                // CustomTexture
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureDir) ), "Textures Directory" },
-                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.CustomTextureSphereLit) ), "Shpere Illumination" },
-
                 { "BetterMoonLight.Texture[BetterMoonLight.Custom]", "Custom Texture" },
                 { "BetterMoonLight.Texture[BetterMoonLight.Moon]", "Moon" }
             };
@@ -238,12 +234,5 @@ namespace BetterMoonLight
 
         [SettingsUIHidden]
         public string SelectedTexture { get; set; } = "BetterMoonLight.Moon";
-
-        [SettingsUISection(ksMain, kgTexture)]
-        [SettingsUIDirectoryPicker]
-        public string CustomTextureDir { get; set; } = "";
-
-        [SettingsUISection(ksMain, kgTexture)]
-        public bool CustomTextureSphereLit { get; set; } = false;
     }
 }

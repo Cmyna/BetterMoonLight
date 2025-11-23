@@ -55,12 +55,6 @@
   "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverrideTexture]": "Override Moon Texture",
   "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverrideTexture]": "Enable This to Override Moon Texture",
 
-  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureDir]": "Select Custom Texture Directory",
-  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureDir]": "Specify directory that stores Albedo&Normal images for moon. The Albedo and Normal images need to be named 'albedo.png' and 'normal.png' (Only PNG Formate Supported). Albedo image file is neccesary and normal file is optional when using custom texture.",
-
-  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureSphereLit]": "Shpere Illumination",
-  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureSphereLit]": "Specify use Shpere Illumination When Custom Texture is used",
-
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]": "Not Overwrite",
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]": "Overwrite(Not Include PhotoMode)",
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]": "Overwrite All(Include PhotoMode)",

@@ -55,12 +55,6 @@
   "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverrideTexture]": "覆盖月面纹理",
   "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverrideTexture]": "启用此选项以启用该模组对月球纹理的修改",
 
-  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureDir]": "选择自定义月球纹理目录",
-  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureDir]": "指定存放月球反照和法线贴图文件的目录。反照率和法线贴图文件需命名为 'albedo.png' 和 'normal.png' (仅支持PNG格式)。当使用自定义纹理时、反照率贴图文件是必选项，法线贴图文件是可选项。",
-
-  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureSphereLit]": "(自定义纹理)启用球面光照",
-  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.CustomTextureSphereLit]": "当选择自定义纹理时、月面渲染是否使用球面光照",
-
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[0]": "不覆盖",
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[1]": "覆盖(不覆盖照片模式)",
   "OPTIONS.BetterMoonLight.OverwriteAuroraLevel[2]": "覆盖(覆盖照片模式)",
