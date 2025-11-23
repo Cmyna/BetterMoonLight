@@ -98,7 +98,7 @@ namespace BetterMoonLight.MoonTextureRenderers
 
             if (albedo == null || normal == null)
             {
-                Mod.log.Error("Albedo or Normal Texture are null");
+                Mod.log.Info("Albedo or Normal Texture are null");
                 return false;
             }
 
