@@ -5,7 +5,7 @@ import {
     DropdownToggle, DropdownItem, 
     Scrollable, 
 } from "cs2/ui"
-import styles from 'css/panel.module.scss'
+import styles from 'css/bettermoonlight-settings.module.scss'
 import { CSSProperties, ReactNode, useEffect, useState } from "react";
 import { useBinding, useTrigger } from "utils/bindings"
 import { useSettingOptionTranslate } from "utils/translations";
