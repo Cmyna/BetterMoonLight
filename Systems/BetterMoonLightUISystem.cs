@@ -80,6 +80,18 @@ namespace BetterMoonLight.Systems
                 (v) => Mod.Setting.OverrideTexture = v
             );
 
+            UseBinding(
+                "AuroraOverwriteLevel",
+                () => Mod.Setting.AuroraOverwriteLevel,
+                (v) => Mod.Setting.AuroraOverwriteLevel = v
+            );
+
+            UseBinding(
+                "AuroraIntensity",
+                () => Mod.Setting.AuroraIntensity,
+                (v) => Mod.Setting.AuroraIntensity = v
+            );
+
             var selectionUpdater = new SelectionsUpdater();
             AddUpdateBinding(
                 new GetterValueBinding<IEnumerable<string>>(

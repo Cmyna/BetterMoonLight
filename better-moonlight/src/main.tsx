@@ -27,6 +27,9 @@ export const Main = () => {
     const translateTexSelectionName = (key: string) => {
         return translate(`BetterMoonLight.Texture[${key}]`) ?? key;
     }
+    const transAuroraOverrideLv = (lv: number) => {
+        return translate(`OPTIONS.BetterMoonLight.OverwriteAuroraLevel[${lv}]`) ?? lv
+    }
 
     // control panel position
     const {
@@ -39,6 +42,7 @@ export const Main = () => {
     const [selectedTexture, setSelectedTexture] = useBinding<string>("SelectedTexture");
     const [availableTextures] = useBinding<{selections: string[]}>("AvailableTextures");
     const [overrideNightLighting, setOverrideNightNightling] = useBinding<boolean>("OverrideNightLighting");
+    const [auroraOverrideLv, setAuroraOverrideLv] = useBinding<number>("AuroraOverwriteLevel");
     const resetSettings = useTrigger("Reset");
 
     // if hide and show setting, reset dragging offset
@@ -159,6 +163,35 @@ export const Main = () => {
                     <SliderRow bindingName="NightLightTemperature" min={3500} max={10000} step={1} />
                     <SliderRow bindingName="MoonTemperature" min={3500} max={10000} step={1} />
                     <SliderRow bindingName="StarfieldEmmisionStrength" min={0} max={1} />
+                </InfoViewSectionMod>
+
+                {/* Aurora Section */}
+                <InfoViewSectionMod>
+                    <Header title={transOptionGroup("Aurora")}/>
+                    <SliderRow bindingName="AuroraIntensity" min={0} max={10} step={0.05} />
+                    <div style={{ display: "flex", flexDirection: "column", marginBottom: "10rem" }}>
+                        <span style={{marginBottom: "10rem"}}>{transOptionName("AuroraOverwriteLevel")}</span>
+                        <Dropdown 
+                            focusKey={FOCUS_DISABLED}
+                            theme={dropdownStyle}
+                            content={[0, 1, 2].map(lv => {
+                                return (
+                                    <DropdownItem
+                                        focusKey={FOCUS_DISABLED}
+                                        key={lv}
+                                        value={lv}
+                                        onChange={(v) => setAuroraOverrideLv(v)}
+                                    >
+                                        {transAuroraOverrideLv(lv)}
+                                    </DropdownItem>
+                                )
+                            })}
+                        >
+                            <DropdownToggle disabled={false}>
+                                <div>{transAuroraOverrideLv(auroraOverrideLv)}</div>
+                            </DropdownToggle>
+                        </Dropdown>
+                    </div>
                 </InfoViewSectionMod>
             </Scrollable>
         </Panel>}
