@@ -61,17 +61,22 @@ export const Main = () => {
     }
 
 
-    const selections = availableTextures.selections.map(selection => {
-        return (
-            <DropdownItem 
-                onChange={(v) => setSelectedTexture(v)}
-                key={selection} 
-                value={selection}
-            >
-                {translateTexSelectionName(selection)}
-            </DropdownItem>
-        )
-    });
+    const selections = (<>
+        <Scrollable style={{maxHeight: "200rem"}}>
+            {availableTextures.selections.map(selection => {
+                return (
+                    <DropdownItem 
+                        focusKey={FOCUS_DISABLED}
+                        onChange={(v) => setSelectedTexture(v)}
+                        key={selection} 
+                        value={selection}
+                    >
+                        {translateTexSelectionName(selection)}
+                    </DropdownItem>
+                )
+            })}
+        </Scrollable>
+    </>)
 
     return (<>
         {<Panel 
