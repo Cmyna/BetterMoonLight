@@ -16,7 +16,6 @@ namespace BetterMoonLight.Utils
         public class Config
         {
             public string name { get; set; }
-            public string caption { get; set; }
 
             public string albedo { get; set; }
 

@@ -3,7 +3,6 @@
     "assets": [
         {
             "name": "Moon",
-            "caption": "Moon",
             "albedo": "Moon.png"
         }
     ]
