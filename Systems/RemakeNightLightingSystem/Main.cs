@@ -41,7 +41,7 @@ namespace BetterMoonLight.Systems
 
         public IMoonTextureRenderer OverrideRenderer { get; set; } = null;
 
-        public IEnumerable<Func<bool>> PendingChanges;
+        public List<Func<bool>> PendingChanges;
 
         private PlanetarySystem planetarySystem;
 
@@ -63,8 +63,10 @@ namespace BetterMoonLight.Systems
             var world = Unity.Entities.World.DefaultGameObjectInjectionWorld;
             planetarySystem = world.GetOrCreateSystemManaged<PlanetarySystem>();
 
-            PendingChanges = new List<Func<bool>>();
-            PendingChanges = PendingChanges.Append(ToggleOverwrite);
+            PendingChanges = new List<Func<bool>>
+            {
+                ToggleOverwrite
+            };
 
             InitNightSkyLight();
             InitMoonDiskLight();
@@ -89,7 +91,7 @@ namespace BetterMoonLight.Systems
         {
             if (PendingChanges != null && PendingChanges.Count() > 0)
             {
-                PendingChanges = PendingChanges.Where(e => !e());
+                PendingChanges = PendingChanges.Where(e => !e()).ToList();
             }
             if (Mod.Setting.OverwriteNightLighting)
             {
