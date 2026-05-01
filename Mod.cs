@@ -59,7 +59,7 @@ namespace BetterMoonLight
             {
                 // load from local mod and subscribed mod
                 loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kUserDataPath, "Mods"));
-                loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kCacheDataPath, "Mods/mods_subscribed"));
+                loader.RecursiveLoadFromDir(Path.Combine(EnvPath.kCacheDataPath, "Mods/pdx_mods"));
             };
             // attach debug UI shown control listener
             Setting.onSettingsApplied += (setting) =>
