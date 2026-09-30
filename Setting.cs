@@ -33,6 +33,9 @@ namespace BetterMoonLight
         [SettingsUISection(ksMain, kgBasic)]
         public bool OverwriteNightLighting { get; set; } = true;
 
+        [SettingsUISection(ksMain, kgBasic)]
+        public bool FixLightingTransition { get; set; } = true;
+
 
         [SettingsUISlider(min = 0, max = 15, step = 0.05f, unit = Unit.kFloatTwoFractions)]
         [SettingsUISection(ksMain, kgNight)]
@@ -142,6 +145,7 @@ namespace BetterMoonLight
 
         public override void SetDefaults()
         {
+            FixLightingTransition = true;
             AmbientLight = 3.5f;
             NightSkyLight = 1f;
             MoonDirectionalLight = 4f;
@@ -184,6 +188,8 @@ namespace BetterMoonLight
                 { m_Setting.GetOptionDescLocaleID(nameof(Setting.ShowOptionsInDeveloperPanel) ), "Show same settings in developer panel (launch with argument '-developerMode' and open by hotkey tab). Then you can see a new tab 'BetterMoonLight' in panel" },
 
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.OverwriteNightLighting) ), "Overwrite Night Lighting" },
+                { m_Setting.GetOptionLabelLocaleID(nameof(Setting.FixLightingTransition)), "Fix Dawn Lighting Blackout" },
+                { m_Setting.GetOptionDescLocaleID(nameof(Setting.FixLightingTransition)), "Prevent a precision error near the horizon from turning off night lighting. Changes take effect immediately." },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.AmbientLight) ), "Night Ambient Light Intensity" },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.NightSkyLight) ), "Night Sky Light Intensity" },
                 { m_Setting.GetOptionLabelLocaleID(nameof(Setting.MoonDirectionalLight) ), "Direct Moon Light Intensity" },

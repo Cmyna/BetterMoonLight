@@ -12,6 +12,7 @@ using BetterMoonLight.Utils;
 using Colossal.PSI.Environment;
 using System.IO;
 using System.Linq;
+using BetterMoonLight.Patches;
 
 namespace BetterMoonLight
 {
@@ -69,10 +70,13 @@ namespace BetterMoonLight
 
             TextureLoader.LoadConfigs();
             Setting.Apply();
+            try { LightingStatePatch.Install(); }
+            catch (System.Exception ex) { log.Warn("Could not install dawn lighting fix: " + ex); }
         }
 
         public void OnDispose()
         {
+            LightingStatePatch.Uninstall();
             log.Info(nameof(OnDispose));
             if (Setting != null)
             {

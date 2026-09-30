@@ -9,6 +9,9 @@
   "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "覆盖夜晚光照",
   "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "启用此选项以启用该模组对夜晚自然光照的修改",
 
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.FixLightingTransition]": "修复黎明光照骤黑",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.FixLightingTransition]": "修复太阳接近地平线时因计算精度导致夜间光照突然关闭的问题。切换后立即生效。",
+
   "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ShowOptionsInDeveloperPanel]": "在DEBUG面板显示mod选项",
   "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ShowOptionsInDeveloperPanel]": "在DEBUG面板显示此模组提供的选项 (在启动游戏时附加参数 '-developerMode'、游戏中tab键打开DEBUG面板)，然后在面板中找到'BetterMoonLight'子页签",
 

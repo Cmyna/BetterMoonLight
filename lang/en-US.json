@@ -9,6 +9,9 @@
   "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "Overwrite Night Lighting",
   "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.OverwriteNightLighting]": "Enable this option to open the modifition of night lighting from this mod",
 
+  "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.FixLightingTransition]": "Fix Dawn Lighting Blackout",
+  "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.FixLightingTransition]": "Prevent a precision error near the horizon from turning off night lighting. Changes take effect immediately.",
+
   "Options.OPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ShowOptionsInDeveloperPanel]": "Show Options in Developer Panel",
   "Options.OPTION_DESCRIPTION[BetterMoonLight.BetterMoonLight.Mod.Setting.ShowOptionsInDeveloperPanel]": "Show same settings in developer panel (launch with argument '-developerMode' and open by hotkey tab). Then you can see a new tab 'BetterMoonLight' in panel",
 

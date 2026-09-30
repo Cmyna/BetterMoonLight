@@ -51,6 +51,12 @@ namespace BetterMoonLight.Utils
                 getter = () => Mod.Setting.OverwriteNightLighting,
                 setter = (v) => Mod.Setting.Update(s => s.OverwriteNightLighting = v),
             });
+            panel.children.Add(new DebugUI.BoolField
+            {
+                displayName = nameof(Setting.FixLightingTransition),
+                getter = () => Mod.Setting.FixLightingTransition,
+                setter = (v) => Mod.Setting.Update(s => s.FixLightingTransition = v),
+            });
             panel.children.Add(new DebugUI.Button
             {
                 displayName = nameof(Setting.ResetModSettings),
