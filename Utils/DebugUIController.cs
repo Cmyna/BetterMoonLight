@@ -3,14 +3,9 @@
 // Licensed under MIT License.
 
 using Game.Debug;
-using Game.Common;
-using Game.Simulation;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -19,7 +14,7 @@ namespace BetterMoonLight.Utils
 {
     public delegate bool GetWidget(out DebugUI.Widget res);
 
-    internal static class DebugUIController
+    internal static partial class DebugUIController
     {
 
         public static GetWidget getTexSelection;
@@ -27,10 +22,7 @@ namespace BetterMoonLight.Utils
         public static GetWidget getOverrideNightLightingOption;
 
         private static DebugUI.Panel panel;
-        private const int TicksPerDay = 262144;
-        private static readonly MethodInfo UpdateTimeMethod = typeof(TimeSystem).GetMethod("UpdateTime", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static string targetTimeText = "3.230";
-        private static string timeStatus = "Ready";
+        static partial void AddTimeDebugWidgets(DebugUI.Panel panel);
 
         public static void UpdateDebugOption(bool show)
         {
@@ -66,27 +58,7 @@ namespace BetterMoonLight.Utils
                 getter = () => Mod.Setting.FixLightingTransition,
                 setter = (v) => Mod.Setting.Update(s => s.FixLightingTransition = v),
             });
-            panel.children.Add(new DebugUI.TextField
-            {
-                displayName = "Target time (decimal hours)",
-                getter = () => targetTimeText,
-                setter = value => targetTimeText = value ?? string.Empty,
-            });
-            panel.children.Add(new DebugUI.Button
-            {
-                displayName = "Set save time (keep date)",
-                action = SetCurrentDayTime,
-            });
-            panel.children.Add(new DebugUI.Value
-            {
-                displayName = "Current save time",
-                getter = GetCurrentSaveTime,
-            });
-            panel.children.Add(new DebugUI.Value
-            {
-                displayName = "Time setting status",
-                getter = () => timeStatus,
-            });
+            AddTimeDebugWidgets(panel);
             panel.children.Add(new DebugUI.Button
             {
                 displayName = nameof(Setting.ResetModSettings),
@@ -229,62 +201,6 @@ namespace BetterMoonLight.Utils
             }
         }
 
-        private static object GetCurrentSaveTime()
-        {
-            var world = World.DefaultGameObjectInjectionWorld;
-            var time = world != null && world.IsCreated ? world.GetExistingSystemManaged<TimeSystem>() : null;
-            if (time == null) return "Waiting for time system";
-            return time.GetCurrentDateTime().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + " " +
-                   (time.normalizedTime * 24f).ToString("F6", CultureInfo.InvariantCulture) + " h";
-        }
-
-        private static void SetCurrentDayTime()
-        {
-            if (!double.TryParse(targetTimeText, NumberStyles.Float, CultureInfo.InvariantCulture, out var hours) ||
-                double.IsNaN(hours) || double.IsInfinity(hours) || hours < 0d || hours >= 24d)
-            {
-                timeStatus = "Enter decimal hours from 0 to less than 24 (e.g. 3.230)";
-                return;
-            }
-
-            var world = World.DefaultGameObjectInjectionWorld;
-            if (world == null || !world.IsCreated) { timeStatus = "No game world"; return; }
-            var time = world.GetExistingSystemManaged<TimeSystem>();
-            if (time == null || UpdateTimeMethod == null) { timeStatus = "Time system unavailable"; return; }
-
-            var manager = world.EntityManager;
-            using (var query = manager.CreateEntityQuery(ComponentType.ReadWrite<TimeData>()))
-            {
-                if (query.CalculateEntityCount() != 1) { timeStatus = "Expected one TimeData entity"; return; }
-                var entity = query.GetSingletonEntity();
-                var original = manager.GetComponentData<TimeData>(entity);
-                var date = time.GetCurrentDateTime().Date;
-                var currentTicks = (long)Math.Round((double)time.normalizedTime * TicksPerDay);
-                var targetTicks = (long)Math.Round(hours / 24d * TicksPerDay);
-                var changed = original;
-                changed.m_FirstFrame = unchecked((uint)((long)original.m_FirstFrame - (targetTicks - currentTicks)));
-
-                try
-                {
-                    manager.SetComponentData(entity, changed);
-                    UpdateTimeMethod.Invoke(time, null);
-                    if (time.GetCurrentDateTime().Date != date)
-                        throw new InvalidOperationException("Date changed; time jump was rolled back");
-
-                    var planetary = world.GetExistingSystemManaged<PlanetarySystem>();
-                    if (planetary != null) planetary.overrideTime = false;
-                    timeStatus = "Set to " + hours.ToString("F6", CultureInfo.InvariantCulture) +
-                                 " h on " + date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-                }
-                catch (Exception exception)
-                {
-                    manager.SetComponentData(entity, original);
-                    try { UpdateTimeMethod.Invoke(time, null); }
-                    catch (Exception restoreException) { Mod.log.Warn("Could not refresh restored time: " + restoreException); }
-                    timeStatus = "Failed: " + exception.GetBaseException().Message;
-                }
-            }
-        }
 
 
         public static void BindOverwriteNightLighting(Func<Setting> getSetting)
